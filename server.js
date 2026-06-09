@@ -1,18 +1,40 @@
 const express = require('express');
 const fetch = require('node-fetch');
-const path = require('path');
 
 const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-const DAILY_API_KEY = process.env.DAILY_API_KEY || 'YOUR_DAILY_API_KEY_HERE';
+const DAILY_API_KEY = process.env.DAILY_API_KEY;
+const DAILY_DOMAIN = process.env.DAILY_DOMAIN || 'haseda'; // نام دامنه Daily تو
 const DAILY_API = 'https://api.daily.co/v1';
+
+// چک کردن کلید هنگام شروع
+if (!DAILY_API_KEY) {
+  console.error('❌ خطا: DAILY_API_KEY تنظیم نشده!');
+}
+
+// تست اتصال به Daily
+async function testDailyConnection() {
+  try {
+    const res = await fetch(`${DAILY_API}/rooms`, {
+      headers: { Authorization: `Bearer ${DAILY_API_KEY}` },
+    });
+    if (res.ok) {
+      console.log('✅ اتصال به Daily.co برقرار شد');
+    } else {
+      const err = await res.json();
+      console.error('❌ خطای Daily API:', err);
+    }
+  } catch (e) {
+    console.error('❌ خطای شبکه:', e.message);
+  }
+}
 
 // ساخت اتاق جدید
 app.post('/api/create-room', async (req, res) => {
-  const { roomName, title, topic } = req.body;
-  const name = roomName || 'room-' + Date.now();
+  const { title, topic } = req.body;
+  const name = 'room-' + Date.now();
 
   try {
     const response = await fetch(`${DAILY_API}/rooms`, {
@@ -26,21 +48,25 @@ app.post('/api/create-room', async (req, res) => {
         properties: {
           enable_chat: false,
           enable_screenshare: false,
-          start_audio_off: true, // میکروفون پیش‌فرض خاموش
-          exp: Math.round(Date.now() / 1000) + 60 * 60 * 4, // 4 ساعت
+          enable_video_processing_ui: false,
+          start_audio_off: true,
+          exp: Math.round(Date.now() / 1000) + 60 * 60 * 6,
         },
       }),
     });
 
     const room = await response.json();
-    if (!response.ok) return res.status(400).json({ error: room.error });
+    console.log('Daily create-room response:', JSON.stringify(room));
 
-    // ذخیره اطلاعات اضافه در حافظه
-    rooms[room.name] = { title, topic, createdAt: Date.now(), listeners: 0 };
+    if (!response.ok) {
+      return res.status(400).json({ error: room.error || 'خطا در ساخت اتاق' });
+    }
 
+    rooms[room.name] = { title, topic, createdAt: Date.now() };
     res.json({ name: room.name, url: room.url });
   } catch (err) {
-    res.status(500).json({ error: 'خطا در ساخت اتاق' });
+    console.error('create-room error:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -58,20 +84,23 @@ app.post('/api/join-room', async (req, res) => {
       body: JSON.stringify({
         properties: {
           room_name: roomName,
-          user_name: userName,
-          is_owner: false,
+          user_name: userName || 'مهمان',
           start_audio_off: !isSpeaker,
-          enable_screenshare: false,
         },
       }),
     });
 
     const data = await response.json();
-    if (!response.ok) return res.status(400).json({ error: data.error });
+    console.log('Daily meeting-token response:', JSON.stringify(data));
+
+    if (!response.ok) {
+      return res.status(400).json({ error: data.error || 'خطا در گرفتن توکن' });
+    }
 
     res.json({ token: data.token });
   } catch (err) {
-    res.status(500).json({ error: 'خطا در ورود به اتاق' });
+    console.error('join-room error:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -82,35 +111,42 @@ app.get('/api/rooms', async (req, res) => {
       headers: { Authorization: `Bearer ${DAILY_API_KEY}` },
     });
     const data = await response.json();
+    console.log('Daily rooms response:', JSON.stringify(data));
+
+    if (!response.ok) {
+      return res.status(400).json({ error: data.error || 'خطا در دریافت اتاق‌ها' });
+    }
+
     const activeRooms = (data.data || []).map((r) => ({
       name: r.name,
       url: r.url,
       title: rooms[r.name]?.title || r.name,
       topic: rooms[r.name]?.topic || '',
-      createdAt: rooms[r.name]?.createdAt || 0,
     }));
     res.json(activeRooms);
   } catch (err) {
-    res.status(500).json({ error: 'خطا در دریافت اتاق‌ها' });
+    console.error('rooms error:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
 // حذف اتاق
 app.delete('/api/rooms/:name', async (req, res) => {
-  const { name } = req.params;
   try {
-    await fetch(`${DAILY_API}/rooms/${name}`, {
+    await fetch(`${DAILY_API}/rooms/${req.params.name}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${DAILY_API_KEY}` },
     });
-    delete rooms[name];
+    delete rooms[req.params.name];
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: 'خطا در حذف اتاق' });
+    res.status(500).json({ error: err.message });
   }
 });
 
-const rooms = {}; // حافظه موقت — در پروژه واقعی از دیتابیس استفاده کن
-
+const rooms = {};
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ سرور روی پورت ${PORT} اجرا شد`));
+app.listen(PORT, () => {
+  console.log(`✅ سرور روی پورت ${PORT} اجرا شد`);
+  testDailyConnection();
+});

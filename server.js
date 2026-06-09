@@ -120,7 +120,7 @@ app.get('/api/rooms', async (req, res) => {
     const activeRooms = (data.data || []).map((r) => ({
       name: r.name,
       url: r.url,
-      title: rooms[r.name]?.title || r.name,
+      title: rooms[r.name]?.title || r.config?.labels?.['en-US']?.name || r.name,
       topic: rooms[r.name]?.topic || '',
     }));
     res.json(activeRooms);
@@ -144,9 +144,60 @@ app.delete('/api/rooms/:name', async (req, res) => {
   }
 });
 
+
+const FIXED_ROOM_NAME = 'be-yad-dargozashtegan';
+const FIXED_ROOM_TITLE = '🕯️ به یاد درگذشتگان';
+const FIXED_ROOM_TOPIC = 'فضایی برای یادآوری و دعا برای عزیزانمان';
+
+async function ensureFixedRoom() {
+  try {
+    // چک کن اتاق وجود داره
+    const check = await fetch(`${DAILY_API}/rooms/${FIXED_ROOM_NAME}`, {
+      headers: { Authorization: `Bearer ${DAILY_API_KEY}` },
+    });
+    if (check.ok) {
+      console.log('✅ اتاق ثابت موجود است');
+      rooms[FIXED_ROOM_NAME] = { title: FIXED_ROOM_TITLE, topic: FIXED_ROOM_TOPIC, createdAt: Date.now() };
+      return;
+    }
+    // اگه نبود بسازش
+    const res = await fetch(`${DAILY_API}/rooms`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${DAILY_API_KEY}` },
+      body: JSON.stringify({
+        name: FIXED_ROOM_NAME,
+        properties: {
+          enable_chat: false,
+          enable_screenshare: false,
+          start_audio_off: true,
+        },
+      }),
+    });
+    const room = await res.json();
+    if (res.ok) {
+      rooms[FIXED_ROOM_NAME] = { title: FIXED_ROOM_TITLE, topic: FIXED_ROOM_TOPIC, createdAt: Date.now() };
+      console.log('✅ اتاق ثابت ساخته شد:', room.name);
+    } else {
+      console.error('❌ خطا در ساخت اتاق ثابت:', room);
+    }
+  } catch (e) {
+    console.error('❌ ensureFixedRoom error:', e.message);
+  }
+}
+
+// اطلاعات اتاق ثابت
+app.get('/api/fixed-room', (req, res) => {
+  res.json({
+    name: FIXED_ROOM_NAME,
+    title: FIXED_ROOM_TITLE,
+    topic: FIXED_ROOM_TOPIC,
+  });
+});
+
 const rooms = {};
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ سرور روی پورت ${PORT} اجرا شد`);
   testDailyConnection();
+  ensureFixedRoom();
 });

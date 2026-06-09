@@ -344,7 +344,7 @@ function renderRooms(rooms){
     return;
   }
   list.innerHTML=rooms.map(r=>`
-    <div class="room-card" onclick="enterRoom('${r.name}','${escHtml(r.title)}','${escHtml(r.topic||'')}')">
+    <div class="room-card" onclick="enterRoom('${r.name}','${escHtml(r.title)}','${escHtml(r.topic||'')}',false,'${r.url||''}')">
       <div class="room-card-top"><span class="tag-live">🔴 زنده</span><span class="listeners-count">👂 در حال اتصال</span></div>
       <div class="room-card-title">${escHtml(r.title)}</div>
       ${r.topic?`<div class="room-card-topic">${escHtml(r.topic)}</div>`:''}
@@ -371,7 +371,7 @@ async function createRoom(){
     const data=await res.json();
     if(data.error)throw new Error(data.error);
     setLoading(false);
-    await enterRoom(data.name,title,topic,true);
+    await enterRoom(data.name,title,topic,true,data.url);
   }catch(e){
     setLoading(false);
     showToast('❌ خطا: '+e.message,3000);
@@ -379,7 +379,7 @@ async function createRoom(){
 }
 
 // ────── ENTER ROOM ──────
-async function enterRoom(roomName,title,topic,isSpeaker=false){
+async function enterRoom(roomName,title,topic,isSpeaker=false,roomUrl=''){
   setLoading(true,'در حال ورود به اتاق...');
   $('rTitle').textContent=title;
   $('rTopic').textContent=topic||'';
@@ -395,7 +395,11 @@ async function enterRoom(roomName,title,topic,isSpeaker=false){
     const data=await res.json();
     if(data.error)throw new Error(data.error);
 
+    // URL اتاق — از سرور میاد یا از roomUrl
+    const joinUrl=roomUrl||`https://haseda.daily.co/${roomName}`;
+
     // ساخت Daily call
+    if(callObj){try{await callObj.destroy()}catch(e){}}
     callObj=DailyIframe.createCallObject({audioSource:true,videoSource:false});
 
     callObj.on('joined-meeting',()=>{
@@ -411,10 +415,15 @@ async function enterRoom(roomName,title,topic,isSpeaker=false){
     callObj.on('participant-joined',onJoin);
     callObj.on('participant-left',onLeave);
     callObj.on('participant-updated',onUpdate);
-    callObj.on('error',(e)=>{showToast('❌ خطای اتصال: '+e.errorMsg,4000);setLoading(false)});
+    callObj.on('error',(e)=>{
+      console.error('Daily error:',e);
+      showToast('❌ خطای اتصال: '+e.errorMsg,4000);
+      setLoading(false);
+    });
 
-    await callObj.join({url:`https://api.daily.co/${roomName}`,token:data.token});
+    await callObj.join({url:joinUrl,token:data.token});
   }catch(e){
+    console.error('enterRoom error:',e);
     setLoading(false);
     showToast('❌ '+e.message,3500);
   }

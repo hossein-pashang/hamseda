@@ -336,7 +336,6 @@ function loadHome(){
   const av=AVATARS[state.user.av];
   const navAv=$('navAv');navAv.style.background=av.bg;navAv.textContent=av.e;navAv.style.fontSize='1.1rem';
   show('home');
-  loadRooms();
 }
 
 async function loadRooms(){} // استفاده نمیشه
@@ -548,7 +547,6 @@ async function leaveRoom(){
   participants={speakers:{},audience:{}};
   state.currentRoom=null;
   show('home');
-  loadRooms();
   showToast('🚪 از اتاق خارج شدی');
 }
 

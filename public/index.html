@@ -74,6 +74,16 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
 .room-card-topic{font-size:0.82rem;color:var(--txt2)}
 
 /* TABBAR */
+.fixed-room-wrap{padding:0 1rem;margin-top:0.5rem}
+.fixed-room-card{background:linear-gradient(145deg,#1e1830,#181818);border:1px solid rgba(108,99,255,0.25);border-radius:20px;padding:2rem 1.5rem;text-align:center;cursor:pointer;transition:all .3s}
+.fixed-room-card:hover{border-color:rgba(108,99,255,0.6);transform:translateY(-2px);box-shadow:0 8px 30px rgba(108,99,255,0.15)}
+.fixed-room-candle{font-size:3.5rem;margin-bottom:1rem;animation:flicker 2s ease-in-out infinite alternate}
+@keyframes flicker{0%{filter:brightness(1)}100%{filter:brightness(1.3) drop-shadow(0 0 8px #fbbf24)}}
+.fixed-room-title{font-size:1.4rem;font-weight:700;margin-bottom:0.5rem;color:var(--txt)}
+.fixed-room-topic{font-size:0.88rem;color:var(--txt2);margin-bottom:1.25rem;line-height:1.6}
+.fixed-room-live{font-size:0.78rem;color:var(--green);margin-bottom:1.25rem;display:flex;align-items:center;justify-content:center;gap:6px}
+.fixed-room-btn{background:var(--acc);color:#fff;border:none;padding:0.9rem 2rem;border-radius:50px;font-family:'Vazirmatn',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;width:100%;transition:all .2s}
+.fixed-room-btn:hover{background:var(--acc2)}
 .tabbar{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;padding:0.5rem 0 1.2rem;z-index:50}
 .tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px;font-size:0.65rem;color:var(--txt3);transition:all .15s}
 .tab-item .tab-icon{font-size:1.4rem}
@@ -177,22 +187,24 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
   <div class="nav">
     <div class="nav-logo">🎙️ هم‌صدا</div>
     <div style="display:flex;gap:8px;align-items:center">
-      <button class="nav-btn" onclick="loadRooms()" title="بروزرسانی">🔄</button>
+
       <div class="avatar-sm" id="navAv"></div>
     </div>
   </div>
   <div class="home-body">
     <div class="greeting">
       <h2 id="greetTxt">سلام! 👋</h2>
-      <p>امروز کجا می‌ری؟</p>
+      <p>خوش آمدی 🤲</p>
     </div>
-    <button class="create-btn" onclick="showCreateModal()">➕ ساخت اتاق جدید</button>
-    <div class="section-hdr">
-      <span class="section-title">🔴 اتاق‌های فعال</span>
-      <span style="font-size:0.78rem;color:var(--acc2);cursor:pointer" onclick="loadRooms()">بروزرسانی</span>
-    </div>
-    <div class="rooms-list" id="roomsList">
-      <div class="empty-rooms"><div class="em-icon">🏠</div><p>هنوز اتاقی نیست<br/>اولین نفر باش!</p></div>
+
+    <div class="fixed-room-wrap" id="fixedRoomWrap">
+      <div class="fixed-room-card" id="fixedRoomCard">
+        <div class="fixed-room-candle">🕯️</div>
+        <div class="fixed-room-title">به یاد درگذشتگان</div>
+        <div class="fixed-room-topic">فضایی برای یادآوری و دعا برای عزیزانمان</div>
+        <div class="fixed-room-live"><span class="live-dot" style="display:inline-block"></span> اتاق فعال</div>
+        <button class="fixed-room-btn" onclick="joinFixedRoom()">🎙️ ورود به اتاق</button>
+      </div>
     </div>
     <div style="height:90px"></div>
   </div>
@@ -327,13 +339,17 @@ function loadHome(){
   loadRooms();
 }
 
-async function loadRooms(){
+async function loadRooms(){} // استفاده نمیشه
+
+async function joinFixedRoom(){
+  setLoading(true,'در حال ورود به اتاق...');
   try{
-    const res=await fetch('/api/rooms');
-    const rooms=await res.json();
-    renderRooms(rooms);
+    const res=await fetch('/api/fixed-room');
+    const room=await res.json();
+    await enterRoom(room.name,room.title,room.topic,true,'');
   }catch(e){
-    renderRooms([]);
+    setLoading(false);
+    showToast('❌ خطا در ورود: '+e.message,3000);
   }
 }
 
@@ -343,12 +359,16 @@ function renderRooms(rooms){
     list.innerHTML='<div class="empty-rooms"><div class="em-icon">🏠</div><p>هنوز اتاقی نیست<br/>اولین نفر باش!</p></div>';
     return;
   }
-  list.innerHTML=rooms.map(r=>`
-    <div class="room-card" onclick="enterRoom('${r.name}','${escHtml(r.title)}','${escHtml(r.topic||'')}',false,'${r.url||''}')">
-      <div class="room-card-top"><span class="tag-live">🔴 زنده</span><span class="listeners-count">👂 در حال اتصال</span></div>
-      <div class="room-card-title">${escHtml(r.title)}</div>
-      ${r.topic?`<div class="room-card-topic">${escHtml(r.topic)}</div>`:''}
-    </div>`).join('');
+  list.innerHTML=rooms.map(r=>{
+    const safeTitle=r.title&&r.title!=='undefined'?r.title:r.name;
+    const safeTopic=r.topic&&r.topic!=='undefined'?r.topic:'';
+    const safeUrl=r.url||'';
+    return `<div class="room-card" onclick="enterRoom('${r.name}','${escHtml(safeTitle)}','${escHtml(safeTopic)}',false,'${safeUrl}')">
+      <div class="room-card-top"><span class="tag-live">🔴 زنده</span><span class="listeners-count">👂 فعال</span></div>
+      <div class="room-card-title">${escHtml(safeTitle)}</div>
+      ${safeTopic?`<div class="room-card-topic">${escHtml(safeTopic)}</div>`:''}
+    </div>`;
+  }).join('');
 }
 
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}

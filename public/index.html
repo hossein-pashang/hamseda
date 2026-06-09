@@ -67,7 +67,7 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
 /* TABBAR */
 
 /* TICKER */
-.ticker-wrap{position:fixed;bottom:0;left:0;right:0;z-index:200;pointer-events:none}
+.ticker-wrap{position:fixed;bottom:130px;left:0;right:0;z-index:90;pointer-events:none}
 .ticker{background:rgba(10,10,10,0.92);backdrop-filter:blur(8px);border-top:1px solid rgba(245,158,11,0.3);padding:10px 0;overflow:hidden;pointer-events:none}
 .ticker-label{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:#000;font-size:0.72rem;font-weight:800;padding:4px 12px;border-radius:0 20px 20px 0;margin-left:12px;white-space:nowrap;vertical-align:middle;flex-shrink:0}
 .ticker-track{display:inline-flex;align-items:center;white-space:nowrap;animation:ticker-scroll 40s linear infinite}
@@ -100,7 +100,7 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
 .live-badge{background:rgba(34,197,94,0.15);color:var(--green);font-size:0.75rem;padding:5px 12px;border-radius:20px;font-weight:700;display:flex;align-items:center;gap:5px}
 .room-page-title{font-size:1.1rem;font-weight:700;margin-bottom:3px}
 .room-page-topic{font-size:0.82rem;color:var(--txt2)}
-.room-body{flex:1;overflow-y:auto;padding:1.25rem;padding-bottom:170px}
+.room-body{flex:1;overflow-y:auto;padding:1.25rem;padding-bottom:220px}
 
 /* SECTIONS */
 .section-lbl{font-size:0.72rem;color:var(--txt3);font-weight:700;letter-spacing:0.07em;margin-bottom:0.85rem;text-transform:uppercase;display:flex;align-items:center;gap:6px}
@@ -244,10 +244,15 @@ hr.div{border:none;border-top:1px solid var(--border);margin:0.5rem 0 1.25rem}
     </div>
     <!-- پانل مدیریت اسامی درگذشتگان -->
     <div class="deceased-panel" id="deceasedPanel" style="display:none">
-      <div class="deceased-panel-title">🕯️ ویرایش اسامی زیرنویس</div>
-      <div class="deceased-list-admin" id="deceasedListAdmin"></div>
-      <button class="add-deceased-btn" onclick="addDeceasedRow()">➕ افزودن نام</button>
-      <button class="save-deceased-btn" onclick="saveDeceased()">💾 ذخیره و نمایش</button>
+      <div class="deceased-panel-title" onclick="toggleDeceasedPanel()" style="cursor:pointer;justify-content:space-between">
+        <span>🕯️ ویرایش اسامی زیرنویس</span>
+        <span id="deceasedToggleIcon">▼</span>
+      </div>
+      <div id="deceasedPanelBody">
+        <div class="deceased-list-admin" id="deceasedListAdmin"></div>
+        <button class="add-deceased-btn" onclick="addDeceasedRow()">➕ افزودن نام جدید</button>
+        <button class="save-deceased-btn" onclick="saveDeceased()">💾 ذخیره و نمایش در زیرنویس</button>
+      </div>
     </div>
     <!-- سخنرانان -->
     <div class="section-lbl">🎤 سخنرانان <span class="cnt" id="spkCount">0</span></div>
@@ -268,6 +273,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:0.5rem 0 1.25rem}
       </button>
       <button class="ctrl-btn" onclick="sendReaction()">
         <span class="ci">🤲</span><span>دعا</span>
+      </button>
+      <button class="ctrl-btn" id="editTickerBtn" onclick="scrollToDeceasedPanel()" style="display:none">
+        <span class="ci">🕯️</span><span>اسامی</span>
       </button>
       <button class="ctrl-btn danger" onclick="leaveRoom()">
         <span class="ci">🚪</span><span>خروج</span>
@@ -424,6 +432,7 @@ async function joinRoom(){
     show('room');
     $('adminPanel').style.display=state.isAdmin?'block':'none';
     $('deceasedPanel').style.display=state.isAdmin?'block':'none';
+    $('editTickerBtn').style.display=state.isAdmin?'flex':'none';
     loadTicker();
     if(state.isAdmin)buildDeceasedPanel();
     updateMicBtn();
@@ -654,11 +663,31 @@ function renderTicker() {
 // ── ADMIN DECEASED MANAGEMENT ──
 function buildDeceasedPanel() {
   const panel = $('deceasedListAdmin');
+  if (!tickerItems.length) {
+    panel.innerHTML = '<p style="color:var(--txt3);font-size:0.8rem;text-align:center;padding:0.5rem">هنوز اسمی اضافه نشده</p>';
+    return;
+  }
   panel.innerHTML = tickerItems.map((item, i) => `
     <div class="deceased-row">
-      <input type="text" value="${escHtml(item)}" id="di_${i}" placeholder="نام و سال تولد-فوت..."/>
+      <input type="text" value="${escHtml(item)}" id="di_${i}" placeholder="مثلاً: روحش شاد — حاج علی محمدی (۱۳۱۰-۱۳۹۵)"/>
       <button class="del-btn" onclick="removeDeceasedRow(${i})">✕</button>
     </div>`).join('');
+}
+
+function scrollToDeceasedPanel() {
+  const panel = $('deceasedPanel');
+  if(panel) panel.scrollIntoView({behavior:'smooth', block:'start'});
+  // اگه بسته بود باز کنش
+  const body = $('deceasedPanelBody');
+  if(body && body.style.display === 'none') toggleDeceasedPanel();
+}
+
+function toggleDeceasedPanel() {
+  const body = $('deceasedPanelBody');
+  const icon = $('deceasedToggleIcon');
+  const isHidden = body.style.display === 'none';
+  body.style.display = isHidden ? 'block' : 'none';
+  icon.textContent = isHidden ? '▲' : '▼';
 }
 
 function addDeceasedRow() {

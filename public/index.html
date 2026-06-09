@@ -10,14 +10,11 @@
 *{box-sizing:border-box;margin:0;padding:0;direction:rtl}
 :root{
   --bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--bg4:#2e2e2e;
-  --acc:#6c63ff;--acc2:#8b85ff;--acc3:#4c44cc;
-  --green:#22c55e;--red:#ef4444;--gold:#f59e0b;
-  --txt:#f5f5f5;--txt2:#a0a0a0;--txt3:#6b6b6b;
-  --border:rgba(255,255,255,0.08)
+  --acc:#6c63ff;--acc2:#8b85ff;--green:#22c55e;--red:#ef4444;--gold:#f59e0b;
+  --txt:#f5f5f5;--txt2:#a0a0a0;--txt3:#6b6b6b;--border:rgba(255,255,255,0.08)
 }
 body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
-.screen{display:none}
-.screen.active{display:flex;flex-direction:column;min-height:100vh}
+.screen{display:none}.screen.active{display:flex;flex-direction:column;min-height:100vh}
 
 /* SPLASH */
 #splash{background:linear-gradient(135deg,#1a1040,#0f0f0f 60%,#0a1a0f);align-items:center;justify-content:center;text-align:center;padding:2rem}
@@ -32,8 +29,6 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
 
 /* SETUP */
 #setup{padding:2rem 1.25rem}
-#setup h2{font-size:1.5rem;font-weight:700;margin-bottom:0.5rem}
-#setup p{color:var(--txt2);font-size:0.9rem;margin-bottom:1.5rem;line-height:1.7}
 .avatar-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.5rem}
 .av-opt{width:54px;height:54px;border-radius:50%;border:3px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:all .2s}
 .av-opt.sel{border-color:var(--acc);box-shadow:0 0 0 3px rgba(108,99,255,0.3)}
@@ -42,21 +37,23 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
 .field input{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--txt);padding:0.85rem 1rem;border-radius:12px;font-family:'Vazirmatn',sans-serif;font-size:0.95rem;outline:none;transition:border-color .2s}
 .field input:focus{border-color:var(--acc)}
 .field input::placeholder{color:var(--txt3)}
+.admin-toggle{display:flex;align-items:center;gap:10px;margin-bottom:1rem;cursor:pointer}
+.admin-toggle input{width:18px;height:18px;cursor:pointer;accent-color:var(--acc)}
+.admin-toggle span{font-size:0.9rem;color:var(--txt2)}
+#adminCodeField{display:none}
 
 /* NAV */
 .nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-shrink:0}
-.nav-logo{font-size:1.25rem;font-weight:700;color:var(--acc2);display:flex;align-items:center;gap:8px}
-.avatar-sm{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;font-weight:600;flex-shrink:0}
+.nav-logo{font-size:1.25rem;font-weight:700;color:var(--acc2)}
+.avatar-sm{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer}
+.admin-badge{background:rgba(245,158,11,0.2);color:var(--gold);font-size:0.7rem;padding:3px 8px;border-radius:20px;font-weight:700}
 
 /* HOME */
-#home{flex-direction:column}
 .home-body{flex:1;overflow-y:auto;padding:1.25rem;padding-bottom:5rem}
 .greeting{margin-bottom:1.5rem}
 .greeting h2{font-size:1.3rem;font-weight:600}
 .greeting p{font-size:0.88rem;color:var(--txt2);margin-top:3px}
-
-/* FIXED ROOM CARD */
-.fixed-room-card{background:linear-gradient(145deg,#1e1830,#181818);border:1px solid rgba(108,99,255,0.25);border-radius:20px;padding:2rem 1.5rem;text-align:center;transition:all .3s}
+.fixed-room-card{background:linear-gradient(145deg,#1e1830,#181818);border:1px solid rgba(108,99,255,0.25);border-radius:20px;padding:2rem 1.5rem;text-align:center}
 .fixed-room-candle{font-size:4rem;margin-bottom:1rem;animation:flicker 2s ease-in-out infinite alternate;display:block}
 @keyframes flicker{0%{filter:brightness(1)}100%{filter:brightness(1.3) drop-shadow(0 0 10px #fbbf24)}}
 .fixed-room-title{font-size:1.5rem;font-weight:700;margin-bottom:0.6rem}
@@ -66,51 +63,98 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 .join-btn{background:var(--acc);color:#fff;border:none;padding:1rem;border-radius:14px;font-family:'Vazirmatn',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;width:100%;transition:all .2s}
 .join-btn:hover{background:var(--acc2)}
-.join-btn:disabled{background:var(--bg4);color:var(--txt3);cursor:not-allowed}
-.online-count{font-size:0.8rem;color:var(--txt3);margin-top:1rem}
 
 /* TABBAR */
+
+/* TICKER */
+.ticker-wrap{position:fixed;bottom:0;left:0;right:0;z-index:200;pointer-events:none}
+.ticker{background:rgba(10,10,10,0.92);backdrop-filter:blur(8px);border-top:1px solid rgba(245,158,11,0.3);padding:10px 0;overflow:hidden;pointer-events:none}
+.ticker-label{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:#000;font-size:0.72rem;font-weight:800;padding:4px 12px;border-radius:0 20px 20px 0;margin-left:12px;white-space:nowrap;vertical-align:middle;flex-shrink:0}
+.ticker-track{display:inline-flex;align-items:center;white-space:nowrap;animation:ticker-scroll 40s linear infinite}
+.ticker-track:hover{animation-play-state:paused}
+.ticker-item{display:inline-flex;align-items:center;gap:8px;font-size:0.82rem;color:#e5d5a0;padding:0 2rem;font-weight:500}
+.ticker-item::before{content:'🕯️';font-size:0.85rem}
+.ticker-item::after{content:'•';color:rgba(245,158,11,0.4);margin-right:1rem}
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ADMIN DECEASED PANEL */
+.deceased-panel{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:1rem;margin-bottom:1.25rem}
+.deceased-panel-title{font-size:0.8rem;color:var(--gold);font-weight:700;margin-bottom:0.75rem;display:flex;align-items:center;gap:6px}
+.deceased-list-admin{display:flex;flex-direction:column;gap:6px;margin-bottom:0.75rem}
+.deceased-row{display:flex;align-items:center;gap:8px;background:var(--bg3);border-radius:8px;padding:7px 10px}
+.deceased-row input{flex:1;background:transparent;border:none;color:var(--txt);font-family:'Vazirmatn',sans-serif;font-size:0.82rem;outline:none}
+.deceased-row .del-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:1rem;padding:0 4px}
+.add-deceased-btn{background:rgba(245,158,11,0.15);color:var(--gold);border:1px solid rgba(245,158,11,0.3);padding:7px 16px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:0.8rem;cursor:pointer;font-weight:600;display:block;width:100%;margin-bottom:8px}
+.save-deceased-btn{background:var(--green);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:0.8rem;cursor:pointer;font-weight:600;display:block;width:100%}
+
 .tabbar{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;padding:0.5rem 0 1.2rem;z-index:50}
 .tab-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px;font-size:0.65rem;color:var(--txt3)}
-.tab-item .tab-icon{font-size:1.4rem}
+.tab-item .ti{font-size:1.4rem}
 .tab-item.active{color:var(--acc2)}
 
-/* ROOM PAGE */
-#room{flex-direction:column;background:var(--bg)}
+/* ROOM */
+#room{flex-direction:column}
 .room-header-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 1.25rem;flex-shrink:0}
 .room-hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .leave-btn{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.2);padding:7px 16px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:0.85rem;cursor:pointer;font-weight:600}
 .live-badge{background:rgba(34,197,94,0.15);color:var(--green);font-size:0.75rem;padding:5px 12px;border-radius:20px;font-weight:700;display:flex;align-items:center;gap:5px}
 .room-page-title{font-size:1.1rem;font-weight:700;margin-bottom:3px}
 .room-page-topic{font-size:0.82rem;color:var(--txt2)}
-.room-body{flex:1;overflow-y:auto;padding:1.25rem;padding-bottom:160px}
-.stage-label{font-size:0.72rem;color:var(--txt3);font-weight:700;letter-spacing:0.07em;margin-bottom:1rem;text-transform:uppercase}
-.participants-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
-.participant-item{display:flex;flex-direction:column;align-items:center;gap:6px}
-.p-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;transition:all .3s;border:3px solid transparent;position:relative}
+.room-body{flex:1;overflow-y:auto;padding:1.25rem;padding-bottom:170px}
+
+/* SECTIONS */
+.section-lbl{font-size:0.72rem;color:var(--txt3);font-weight:700;letter-spacing:0.07em;margin-bottom:0.85rem;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.section-lbl .cnt{background:var(--bg3);color:var(--txt2);font-size:0.65rem;padding:2px 7px;border-radius:10px}
+
+/* SPEAKERS GRID */
+.speakers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;min-height:80px}
+.p-item{display:flex;flex-direction:column;align-items:center;gap:5px;position:relative}
+.p-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:all .3s;border:3px solid transparent;position:relative}
 .p-avatar.speaking{border-color:var(--green);box-shadow:0 0 0 3px rgba(34,197,94,0.2),0 0 20px rgba(34,197,94,0.1)}
 .p-avatar.muted::after{content:'🔇';position:absolute;bottom:-2px;right:-2px;font-size:0.65rem;background:var(--bg3);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center}
-.p-name{font-size:0.72rem;font-weight:600;text-align:center;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
-.p-me{font-size:0.62rem;color:var(--acc2);text-align:center}
-.empty-stage{text-align:center;padding:2rem;color:var(--txt3);font-size:0.85rem}
+.p-name{font-size:0.72rem;font-weight:600;text-align:center;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:72px}
+.p-role{font-size:0.62rem;color:var(--txt3);text-align:center}
+.p-admin-star{position:absolute;top:-4px;left:-4px;font-size:0.9rem}
+
+/* AUDIENCE GRID */
+.audience-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0.75rem}
+.aud-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.aud-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s}
+.aud-avatar.hand-up{border:2px solid var(--gold);box-shadow:0 0 8px rgba(245,158,11,0.3)}
+.aud-name{font-size:0.63rem;color:var(--txt2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
+.hand-indicator{font-size:0.7rem;text-align:center}
+
+/* DIVIDER */
+hr.div{border:none;border-top:1px solid var(--border);margin:0.5rem 0 1.25rem}
 
 /* CONTROLS */
 .room-controls{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);padding:0.85rem 1rem 1.5rem}
 .status-bar{text-align:center;font-size:0.75rem;color:var(--txt3);margin-bottom:8px;min-height:18px}
 .ctrl-row{display:flex;gap:8px}
-.ctrl-btn{background:var(--bg3);border:1px solid var(--border);color:var(--txt);border-radius:14px;padding:0.75rem 0.5rem;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1;font-family:'Vazirmatn',sans-serif;font-size:0.68rem;font-weight:500;transition:all .2s}
-.ctrl-btn .ci{font-size:1.35rem}
+.ctrl-btn{background:var(--bg3);border:1px solid var(--border);color:var(--txt);border-radius:14px;padding:0.7rem 0.4rem;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1;font-family:'Vazirmatn',sans-serif;font-size:0.65rem;font-weight:500;transition:all .2s;min-width:0}
+.ctrl-btn .ci{font-size:1.3rem}
 .ctrl-btn.mic-on{background:var(--green);border-color:var(--green);color:#fff}
-.ctrl-btn.mic-off{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.25);color:var(--red)}
-.ctrl-btn.raised{background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.3);color:var(--gold)}
-.ctrl-btn.danger{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.25);color:var(--red)}
+.ctrl-btn.mic-off{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);color:var(--red)}
+.ctrl-btn.raised{background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.4);color:var(--gold)}
+.ctrl-btn.danger{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);color:var(--red)}
+.ctrl-btn:disabled{opacity:0.4;cursor:not-allowed}
+
+/* ADMIN PANEL */
+.admin-panel{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:1rem;margin-bottom:1.25rem}
+.admin-panel-title{font-size:0.8rem;color:var(--gold);font-weight:700;margin-bottom:0.75rem;display:flex;align-items:center;gap:6px}
+.hand-requests{display:flex;flex-direction:column;gap:8px}
+.hand-req{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border-radius:10px;padding:8px 12px}
+.hand-req-name{font-size:0.85rem;font-weight:600}
+.hand-req-btns{display:flex;gap:6px}
+.allow-btn{background:var(--green);color:#fff;border:none;padding:5px 12px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:0.75rem;cursor:pointer;font-weight:600}
+.deny-btn{background:rgba(239,68,68,0.15);color:var(--red);border:none;padding:5px 12px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:0.75rem;cursor:pointer}
+.no-requests{font-size:0.8rem;color:var(--txt3);text-align:center;padding:0.5rem}
 
 /* LOADING */
 .loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
 .loading-overlay.hidden{display:none}
 .spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-msg{color:var(--txt2);font-size:0.9rem}
 
 /* TOAST */
 .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--bg3);border:1px solid var(--border);color:var(--txt);padding:10px 22px;border-radius:50px;font-size:0.85rem;opacity:0;transition:all .25s;z-index:999;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
@@ -125,28 +169,39 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
   <div class="app-name">هم‌صدا</div>
   <p class="app-tag">فضای گفتگوی صوتی خانوادگی</p>
   <button class="btn-main" onclick="showSetup()">ورود و شروع کن 🎉</button>
-  <button class="btn-outline" onclick="quickGuest()">ورود سریع بدون ثبت‌نام</button>
+  <button class="btn-outline" onclick="quickGuest()">ورود سریع</button>
 </div>
 
 <!-- SETUP -->
 <div id="setup" class="screen">
   <div style="padding:2rem 1.25rem;flex:1">
-    <h2>پروفایل خودتو بساز 👤</h2>
-    <p>یه اسم و آواتار انتخاب کن تا بقیه بشناسنت</p>
+    <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:0.5rem">پروفایل خودتو بساز 👤</h2>
+    <p style="color:var(--txt2);font-size:0.9rem;margin-bottom:1.5rem">یه اسم و آواتار انتخاب کن</p>
     <div class="avatar-row" id="avatarRow"></div>
     <div class="field">
-      <label>اسم یا لقب تو در خانواده</label>
+      <label>اسم یا لقب در خانواده</label>
       <input id="uName" type="text" placeholder="مثلاً: عمو رضا، خاله فاطمه..." maxlength="30"/>
     </div>
+    <label class="admin-toggle">
+      <input type="checkbox" id="isAdminCheck" onchange="toggleAdminField()"/>
+      <span>👑 ورود به عنوان مدیر اتاق</span>
+    </label>
+    <div class="field" id="adminCodeField">
+      <label>کد مدیر</label>
+      <input id="adminCode" type="password" placeholder="کد مدیر را وارد کن"/>
+    </div>
     <button class="btn-main" style="max-width:100%;margin-top:1rem" onclick="saveProfile()">بریم! 🚀</button>
-    <button class="btn-outline" style="max-width:100%;margin-top:0.5rem" onclick="show('splash')">برگشت</button>
+    <button class="btn-outline" style="max-width:100%" onclick="show('splash')">برگشت</button>
   </div>
 </div>
 
 <!-- HOME -->
 <div id="home" class="screen">
   <div class="nav">
-    <div class="nav-logo">🕯️ هم‌صدا</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="nav-logo">🕯️ هم‌صدا</div>
+      <span class="admin-badge" id="adminBadge" style="display:none">👑 مدیر</span>
+    </div>
     <div class="avatar-sm" id="navAv"></div>
   </div>
   <div class="home-body">
@@ -158,15 +213,14 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
       <span class="fixed-room-candle">🕯️</span>
       <div class="fixed-room-title">به یاد درگذشتگان</div>
       <div class="fixed-room-topic">فضایی برای یادآوری و دعا برای عزیزانمان</div>
-      <div class="live-pill"><span class="live-dot"></span> اتاق همیشه فعال</div>
-      <button class="join-btn" id="joinBtn" onclick="joinRoom()">🎙️ ورود به اتاق</button>
-      <div class="online-count" id="onlineCount"></div>
+      <div class="live-pill"><span class="live-dot"></span>اتاق همیشه فعال</div>
+      <button class="join-btn" onclick="joinRoom()">🎙️ ورود به اتاق</button>
     </div>
   </div>
   <div class="tabbar">
-    <div class="tab-item active"><span class="tab-icon">🏠</span><span>خانه</span></div>
-    <div class="tab-item" onclick="showToast('👥 به زودی!')"><span class="tab-icon">👥</span><span>خانواده</span></div>
-    <div class="tab-item" onclick="showToast('⚙️ به زودی!')"><span class="tab-icon">⚙️</span><span>تنظیمات</span></div>
+    <div class="tab-item active"><span class="ti">🏠</span><span>خانه</span></div>
+    <div class="tab-item" onclick="showToast('👥 به زودی!')"><span class="ti">👥</span><span>خانواده</span></div>
+    <div class="tab-item" onclick="showToast('⚙️ به زودی!')"><span class="ti">⚙️</span><span>تنظیمات</span></div>
   </div>
 </div>
 
@@ -180,18 +234,34 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
     <div class="room-page-title">🕯️ به یاد درگذشتگان</div>
     <div class="room-page-topic">فضایی برای یادآوری و دعا برای عزیزانمان</div>
   </div>
-  <div class="room-body">
-    <div class="stage-label">🎤 حاضرین در اتاق</div>
-    <div class="participants-grid" id="participantsGrid">
-      <div class="empty-stage">هنوز کسی نیست...</div>
+  <div class="room-body" id="roomBody">
+    <!-- پانل مدیر -->
+    <div class="admin-panel" id="adminPanel" style="display:none">
+      <div class="admin-panel-title">👑 پانل مدیر — درخواست‌های دست بلند</div>
+      <div class="hand-requests" id="handRequests">
+        <div class="no-requests">درخواستی نیست</div>
+      </div>
     </div>
+    <!-- پانل مدیریت اسامی درگذشتگان -->
+    <div class="deceased-panel" id="deceasedPanel" style="display:none">
+      <div class="deceased-panel-title">🕯️ ویرایش اسامی زیرنویس</div>
+      <div class="deceased-list-admin" id="deceasedListAdmin"></div>
+      <button class="add-deceased-btn" onclick="addDeceasedRow()">➕ افزودن نام</button>
+      <button class="save-deceased-btn" onclick="saveDeceased()">💾 ذخیره و نمایش</button>
+    </div>
+    <!-- سخنرانان -->
+    <div class="section-lbl">🎤 سخنرانان <span class="cnt" id="spkCount">0</span></div>
+    <div class="speakers-grid" id="speakersGrid"></div>
+    <hr class="div"/>
+    <!-- شنوندگان -->
+    <div class="section-lbl">👂 شنوندگان <span class="cnt" id="audCount">0</span></div>
+    <div class="audience-grid" id="audienceGrid"></div>
   </div>
   <div class="room-controls">
-    <div class="status-bar" id="statusBar">در حال اتصال...</div>
+    <div class="status-bar" id="statusBar"></div>
     <div class="ctrl-row">
       <button class="ctrl-btn mic-on" id="micBtn" onclick="toggleMic()">
-        <span class="ci" id="micIco">🎤</span>
-        <span id="micLbl">میکروفون</span>
+        <span class="ci" id="micIco">🎤</span><span id="micLbl">میکروفون</span>
       </button>
       <button class="ctrl-btn" id="handBtn" onclick="toggleHand()">
         <span class="ci">✋</span><span>دست بلند</span>
@@ -206,12 +276,20 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
   </div>
 </div>
 
+
+<!-- TICKER -->
+<div class="ticker-wrap" id="tickerWrap" style="display:none">
+  <div class="ticker">
+    <span class="ticker-label">🕯️ یاد درگذشتگان</span>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+</div>
+
 <!-- LOADING -->
 <div class="loading-overlay hidden" id="loadingOverlay">
   <div class="spinner"></div>
-  <p class="loading-msg" id="loadingMsg">در حال اتصال...</p>
+  <p style="color:var(--txt2);font-size:0.9rem" id="loadingMsg">در حال اتصال...</p>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -221,15 +299,17 @@ const AVATARS=[
   {bg:'#be185d',e:'👧'},{bg:'#b45309',e:'👱'}
 ];
 
-let state={user:{name:'',av:0},mic:true,hand:false,selAv:0};
-let room=null; // LiveKit Room object
-let participants={}; // sid -> {name, av, muted, speaking}
+let state={user:{name:'',av:0},isAdmin:false,adminCode:'',mic:false,hand:false,canSpeak:false,selAv:0,myIdentity:''};
+let room=null;
+// sid/identity -> {name,av,isAdmin,canSpeak,muted,speaking,handUp,isMe}
+let participants={};
+let pollInterval=null;
 
-// ── UTILS ──
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function $(id){return document.getElementById(id)}
-function showToast(msg,dur=2400){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
-function setLoading(on,msg='در حال اتصال...'){$('loadingOverlay').classList.toggle('hidden',!on);$('loadingMsg').textContent=msg}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active')}
+function showToast(msg,dur=2500){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
+function setLoading(on,msg=''){$('loadingOverlay').classList.toggle('hidden',!on);$('loadingMsg').textContent=msg}
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 // ── AVATAR PICKER ──
 function buildAvatarPicker(){
@@ -243,22 +323,30 @@ function buildAvatarPicker(){
   });
 }
 
+function toggleAdminField(){
+  $('adminCodeField').style.display=$('isAdminCheck').checked?'block':'none';
+}
+
 // ── AUTH ──
 function showSetup(){buildAvatarPicker();show('setup')}
 function quickGuest(){
-  state.user={name:'مهمان_'+Math.floor(Math.random()*1000),av:Math.floor(Math.random()*8)};
+  state.user={name:'مهمان_'+Math.floor(Math.random()*999),av:Math.floor(Math.random()*8)};
+  state.isAdmin=false;state.adminCode='';
   loadHome();
 }
 function saveProfile(){
   const n=$('uName').value.trim();
   if(!n){showToast('⚠️ اسمت رو وارد کن!');return}
   state.user={name:n,av:state.selAv};
+  state.isAdmin=$('isAdminCheck').checked;
+  state.adminCode=$('adminCode').value.trim();
   loadHome();
 }
 function loadHome(){
   $('greetTxt').textContent='سلام '+state.user.name+' 👋';
   const av=AVATARS[state.user.av];
   const navAv=$('navAv');navAv.style.background=av.bg;navAv.textContent=av.e;
+  $('adminBadge').style.display=state.isAdmin?'inline':'none';
   show('home');
 }
 
@@ -267,173 +355,347 @@ async function joinRoom(){
   setLoading(true,'در حال گرفتن مجوز...');
   try{
     const res=await fetch('/api/token',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({userName:state.user.name})
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({userName:state.user.name,adminCode:state.isAdmin?state.adminCode:''})
     });
     const data=await res.json();
     if(data.error)throw new Error(data.error);
 
-    setLoading(true,'در حال اتصال به اتاق...');
+    if(state.isAdmin&&!data.isAdmin){
+      setLoading(false);showToast('❌ کد مدیر اشتباهه!',3000);return;
+    }
 
-    // ساخت LiveKit Room
+    state.isAdmin=data.isAdmin;
+    state.canSpeak=data.canPublish;
+    state.mic=false;
+
+    setLoading(true,'در حال اتصال...');
+
     room=new LivekitClient.Room({
-      adaptiveStream:true,
-      dynacast:true,
+      adaptiveStream:true,dynacast:true,
       audioCaptureDefaults:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}
     });
 
-    // رویدادها
-    room.on(LivekitClient.RoomEvent.ParticipantConnected, onParticipantJoin);
-    room.on(LivekitClient.RoomEvent.ParticipantDisconnected, onParticipantLeave);
-    room.on(LivekitClient.RoomEvent.TrackSubscribed, onTrackSubscribed);
-    room.on(LivekitClient.RoomEvent.TrackUnsubscribed, onTrackUnsubscribed);
-    room.on(LivekitClient.RoomEvent.ActiveSpeakersChanged, onSpeakersChanged);
-    room.on(LivekitClient.RoomEvent.TrackMuted, ()=>renderParticipants());
-    room.on(LivekitClient.RoomEvent.TrackUnmuted, ()=>renderParticipants());
-    room.on(LivekitClient.RoomEvent.Disconnected, ()=>{
-      showToast('🔌 اتصال قطع شد');
-      show('home');
+    room.on(LivekitClient.RoomEvent.ParticipantConnected,p=>{
+      addRemote(p);showToast('👋 '+(p.name||p.identity)+' وارد شد');
     });
+    room.on(LivekitClient.RoomEvent.ParticipantDisconnected,p=>{
+      const name=participants[p.sid]?.name||p.identity;
+      delete participants[p.sid];
+      renderAll();showToast('🚶 '+name+' رفت');
+    });
+    room.on(LivekitClient.RoomEvent.TrackSubscribed,(track,pub,p)=>{
+      if(track.kind===LivekitClient.Track.Kind.Audio){
+        const el=track.attach();el.style.display='none';document.body.appendChild(el);
+      }
+    });
+    room.on(LivekitClient.RoomEvent.TrackUnsubscribed,track=>{track.detach().forEach(el=>el.remove())});
+    room.on(LivekitClient.RoomEvent.ActiveSpeakersChanged,speakers=>{
+      Object.values(participants).forEach(p=>p.speaking=false);
+      speakers.forEach(p=>{
+        const key=p.isLocal?'local':p.sid;
+        if(participants[key])participants[key].speaking=true;
+      });
+      renderAll();
+    });
+    room.on(LivekitClient.RoomEvent.TrackMuted,()=>renderAll());
+    room.on(LivekitClient.RoomEvent.TrackUnmuted,()=>renderAll());
+    room.on(LivekitClient.RoomEvent.Disconnected,()=>{show('home');showToast('🔌 اتصال قطع شد')});
 
-    // اتصال
-    await room.connect(data.wsUrl, data.token);
+    await room.connect(data.wsUrl,data.token);
+    state.myIdentity=room.localParticipant.identity;
 
-    // فعال کردن میکروفون
-    await room.localParticipant.setMicrophoneEnabled(true);
-    state.mic=true;
+    // اگه مدیره، میکروفون رو فعال کن
+    if(state.isAdmin){
+      await room.localParticipant.setMicrophoneEnabled(true);
+      state.mic=true;state.canSpeak=true;
+    }
 
-    // اضافه کردن خود به لیست
-    addLocalParticipant();
-    // اضافه کردن بقیه که قبلاً بودن
-    room.remoteParticipants.forEach(p=>addRemoteParticipant(p));
+    // اضافه کردن خود
+    participants['local']={
+      name:state.user.name,av:AVATARS[state.user.av],
+      isAdmin:state.isAdmin,canSpeak:state.isAdmin,
+      muted:!state.mic,speaking:false,handUp:false,isMe:true,
+      identity:state.myIdentity
+    };
+    room.remoteParticipants.forEach(p=>addRemote(p));
 
     setLoading(false);
     show('room');
+    $('adminPanel').style.display=state.isAdmin?'block':'none';
+    $('deceasedPanel').style.display=state.isAdmin?'block':'none';
+    loadTicker();
+    if(state.isAdmin)buildDeceasedPanel();
+    updateMicBtn();
+    renderAll();
     $('statusBar').textContent='✅ متصل شدی!';
     setTimeout(()=>$('statusBar').textContent='',3000);
-    updateMicUI();
+
+    // پول وضعیت هر ۴ ثانیه
+    startPolling();
 
   }catch(e){
     setLoading(false);
-    console.error('joinRoom error:',e);
+    console.error('joinRoom:',e);
     showToast('❌ خطا: '+e.message,4000);
   }
 }
 
-// ── PARTICIPANT MANAGEMENT ──
-function addLocalParticipant(){
-  const av=AVATARS[state.user.av];
-  participants['local']={
-    name:state.user.name,
-    av,isMe:true,
-    muted:!state.mic,
-    speaking:false
-  };
-  renderParticipants();
-}
-
-function addRemoteParticipant(p){
+function addRemote(p){
   const av=AVATARS[Math.floor(Math.random()*AVATARS.length)];
-  participants[p.sid]={name:p.name||p.identity||'مهمان',av,isMe:false,muted:p.isMicrophoneEnabled===false,speaking:false};
-  renderParticipants();
+  participants[p.sid]={
+    name:p.name||p.identity||'مهمان',av,
+    isAdmin:false,canSpeak:false,
+    muted:!p.isMicrophoneEnabled,speaking:false,handUp:false,isMe:false,
+    identity:p.identity,sid:p.sid
+  };
+  renderAll();
 }
 
-function onParticipantJoin(p){
-  addRemoteParticipant(p);
-  showToast('👋 '+( p.name||p.identity)+' وارد شد');
-  updateOnlineCount();
-}
+// ── RENDER ──
+function renderAll(){
+  const all=Object.values(participants);
+  const speakers=all.filter(p=>p.canSpeak||p.isAdmin);
+  const audience=all.filter(p=>!p.canSpeak&&!p.isAdmin);
 
-function onParticipantLeave(p){
-  const name=participants[p.sid]?.name||p.identity;
-  delete participants[p.sid];
-  renderParticipants();
-  showToast('🚶 '+name+' خارج شد');
-  updateOnlineCount();
-}
+  // sync local muted
+  if(participants['local'])participants['local'].muted=!state.mic;
 
-function onTrackSubscribed(track,pub,p){
-  if(track.kind===LivekitClient.Track.Kind.Audio){
-    const el=track.attach();
-    el.style.display='none';
-    document.body.appendChild(el);
+  $('spkCount').textContent=speakers.length;
+  $('audCount').textContent=audience.length;
+
+  // سخنرانان
+  const sg=$('speakersGrid');
+  sg.innerHTML=speakers.length?speakers.map(p=>`
+    <div class="p-item">
+      ${p.isAdmin?'<span class="p-admin-star">👑</span>':''}
+      <div class="p-avatar ${p.speaking?'speaking':''} ${p.muted?'muted':''}" style="background:${p.av.bg}">${p.av.e}</div>
+      <div class="p-name">${escHtml(p.name)}</div>
+      <div class="p-role">${p.isMe?'(شما)':p.isAdmin?'مدیر':'سخنران'}</div>
+    </div>`).join('')
+    :'<p style="color:var(--txt3);font-size:0.82rem;grid-column:span 3;text-align:center;padding:1rem">سخنرانی نیست</p>';
+
+  // شنوندگان
+  const ag=$('audienceGrid');
+  ag.innerHTML=audience.length?audience.map(p=>`
+    <div class="aud-item" ${state.isAdmin&&p.handUp?`onclick="adminAllowSpeak('${p.identity}','${escHtml(p.name)}')"`:''}>
+      <div class="aud-avatar ${p.handUp?'hand-up':''}" style="background:${p.av.bg}">${p.av.e}</div>
+      <div class="aud-name">${escHtml(p.name)}${p.isMe?' (شما)':''}</div>
+      ${p.handUp?'<div class="hand-indicator">✋</div>':''}
+    </div>`).join('')
+    :'<p style="color:var(--txt3);font-size:0.82rem;grid-column:span 5;text-align:center">شنوندهٔ دیگری نیست</p>';
+
+  // پانل مدیر
+  if(state.isAdmin){
+    const reqs=all.filter(p=>p.handUp&&!p.isMe);
+    const hr=$('handRequests');
+    hr.innerHTML=reqs.length?reqs.map(p=>`
+      <div class="hand-req">
+        <span class="hand-req-name">✋ ${escHtml(p.name)}</span>
+        <div class="hand-req-btns">
+          <button class="allow-btn" onclick="adminAllowSpeak('${p.identity}','${escHtml(p.name)}')">🎤 اجازه بده</button>
+          <button class="deny-btn" onclick="adminDenySpeak('${p.identity}','${escHtml(p.name)}')">رد</button>
+        </div>
+      </div>`).join('')
+      :'<div class="no-requests">درخواستی نیست ✅</div>';
   }
 }
 
-function onTrackUnsubscribed(track){
-  track.detach().forEach(el=>el.remove());
+// ── POLLING ──
+async function startPolling(){
+  if(pollInterval)clearInterval(pollInterval);
+  await syncRoomState();
+  pollInterval=setInterval(syncRoomState,4000);
 }
 
-function onSpeakersChanged(speakers){
-  Object.keys(participants).forEach(sid=>{ if(participants[sid])participants[sid].speaking=false });
-  speakers.forEach(p=>{
-    const sid=p.isLocal?'local':p.sid;
-    if(participants[sid])participants[sid].speaking=true;
-  });
-  renderParticipants();
+async function syncRoomState(){
+  try{
+    const res=await fetch('/api/room-state');
+    const data=await res.json();
+    // آپدیت وضعیت دست‌ها
+    Object.values(participants).forEach(p=>{
+      if(p.identity)p.handUp=data.handsUp.includes(p.identity);
+    });
+    // آپدیت اجازه صحبت
+    Object.values(participants).forEach(p=>{
+      if(p.identity&&!p.isAdmin){
+        const wasAllowed=p.canSpeak;
+        p.canSpeak=data.speakers.includes(p.identity);
+        // اگه به خودم اجازه دادن
+        if(p.isMe&&!wasAllowed&&p.canSpeak){
+          enableMyMic();
+        }
+      }
+    });
+    renderAll();
+  }catch(e){}
 }
 
-function renderParticipants(){
-  const grid=$('participantsGrid');
-  const list=Object.values(participants);
-  if(!list.length){grid.innerHTML='<div class="empty-stage">هنوز کسی نیست...</div>';return}
-  
-  // sync muted state for local
-  if(participants['local'])participants['local'].muted=!state.mic;
-
-  grid.innerHTML=list.map(p=>`
-    <div class="participant-item">
-      <div class="p-avatar ${p.speaking?'speaking':''} ${p.muted?'muted':''}" style="background:${p.av.bg}">${p.av.e}</div>
-      <div class="p-name">${escHtml(p.name)}</div>
-      ${p.isMe?'<div class="p-me">(شما)</div>':''}
-    </div>`).join('');
+async function enableMyMic(){
+  if(!room)return;
+  try{
+    await room.localParticipant.setMicrophoneEnabled(true);
+    state.mic=true;state.canSpeak=true;state.hand=false;
+    $('handBtn').className='ctrl-btn';
+    updateMicBtn();
+    renderAll();
+    showToast('🎤 مدیر به شما اجازه صحبت داد!',4000);
+    // دست رو پایین بیار
+    await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({identity:state.myIdentity,raised:false})});
+  }catch(e){}
 }
 
-function updateOnlineCount(){
-  const count=Object.keys(participants).length;
-  $('onlineCount').textContent=count>0?count+' نفر آنلاین':'';
+// ── ADMIN ACTIONS ──
+async function adminAllowSpeak(identity,name){
+  if(!state.isAdmin)return;
+  try{
+    await fetch('/api/allow-speak',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({adminCode:state.adminCode,targetIdentity:identity,allow:true})});
+    showToast('✅ به '+name+' اجازه صحبت داده شد');
+    await syncRoomState();
+  }catch(e){showToast('❌ خطا')}
+}
+
+async function adminDenySpeak(identity,name){
+  if(!state.isAdmin)return;
+  try{
+    await fetch('/api/allow-speak',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({adminCode:state.adminCode,targetIdentity:identity,allow:false})});
+    // دست رو هم پایین بیار
+    await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({identity,raised:false})});
+    showToast('❌ درخواست '+name+' رد شد');
+    await syncRoomState();
+  }catch(e){}
 }
 
 // ── CONTROLS ──
 async function toggleMic(){
   if(!room)return;
+  if(!state.canSpeak&&!state.isAdmin){
+    showToast('⚠️ باید از مدیر اجازه بگیری — دست بلند کن!',3000);return;
+  }
   state.mic=!state.mic;
   await room.localParticipant.setMicrophoneEnabled(state.mic);
   if(participants['local'])participants['local'].muted=!state.mic;
-  updateMicUI();
-  renderParticipants();
+  updateMicBtn();renderAll();
   showToast(state.mic?'🎤 میکروفون روشن شد':'🔇 میکروفون خاموش شد');
 }
 
-function updateMicUI(){
+function updateMicBtn(){
   const btn=$('micBtn'),ico=$('micIco'),lbl=$('micLbl');
   if(state.mic){btn.className='ctrl-btn mic-on';ico.textContent='🎤';lbl.textContent='میکروفون'}
   else{btn.className='ctrl-btn mic-off';ico.textContent='🔇';lbl.textContent='بی‌صدا'}
 }
 
-function toggleHand(){
+async function toggleHand(){
+  if(state.isAdmin)return;
+  if(state.canSpeak){showToast('شما اجازه صحبت داری!');return}
   state.hand=!state.hand;
   $('handBtn').className=state.hand?'ctrl-btn raised':'ctrl-btn';
-  showToast(state.hand?'✋ دستت بالاست!':'دست پایین آمد');
+  try{
+    await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({identity:state.myIdentity,raised:state.hand})});
+    if(participants['local'])participants['local'].handUp=state.hand;
+    showToast(state.hand?'✋ درخواست فرستادی — مدیر می‌بینه':'دست پایین آمد');
+    renderAll();
+  }catch(e){}
 }
 
-const reactions=['🤲','🌹','❤️','🕊️','☮️','🙏','💐'];
-let rIdx=0;
-function sendReaction(){showToast(reactions[rIdx%reactions.length]+' فرستادی');rIdx++}
+const reactions=['🤲','🌹','❤️','🕊️','🙏','💐','☮️'];
+let ri=0;
+function sendReaction(){showToast(reactions[ri%reactions.length]+' فرستادی');ri++}
 
 async function leaveRoom(){
+  if(pollInterval){clearInterval(pollInterval);pollInterval=null}
+  if(state.hand&&state.myIdentity){
+    await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({identity:state.myIdentity,raised:false})}).catch(()=>{});
+  }
   if(room){try{await room.disconnect()}catch(e){}}
-  room=null;
-  participants={};
-  state.mic=true;state.hand=false;
-  show('home');
-  showToast('🚪 از اتاق خارج شدی');
+  room=null;participants={};
+  state.mic=false;state.hand=false;state.canSpeak=false;state.myIdentity='';
+  $('tickerWrap').style.display='none';
+  show('home');showToast('🚪 از اتاق خارج شدی');
 }
-
-function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 buildAvatarPicker();
 </script>
 </body>
 </html>
+<script>
+// ── TICKER ──
+let tickerItems = [];
+
+async function loadTicker() {
+  try {
+    const res = await fetch('/api/deceased');
+    const data = await res.json();
+    tickerItems = data.list || [];
+    renderTicker();
+  } catch(e) {}
+}
+
+function renderTicker() {
+  if (!tickerItems.length) { $('tickerWrap').style.display = 'none'; return; }
+  $('tickerWrap').style.display = 'block';
+  // دو بار تکرار برای حلقه بی‌نهایت روان
+  const doubled = [...tickerItems, ...tickerItems];
+  $('tickerTrack').innerHTML = doubled.map(item =>
+    `<span class="ticker-item">${escHtml(item)}</span>`
+  ).join('');
+  // سرعت بر اساس تعداد کاراکترها
+  const totalLen = tickerItems.join('').length;
+  const duration = Math.max(30, totalLen * 0.4);
+  $('tickerTrack').style.animationDuration = duration + 's';
+}
+
+// ── ADMIN DECEASED MANAGEMENT ──
+function buildDeceasedPanel() {
+  const panel = $('deceasedListAdmin');
+  panel.innerHTML = tickerItems.map((item, i) => `
+    <div class="deceased-row">
+      <input type="text" value="${escHtml(item)}" id="di_${i}" placeholder="نام و سال تولد-فوت..."/>
+      <button class="del-btn" onclick="removeDeceasedRow(${i})">✕</button>
+    </div>`).join('');
+}
+
+function addDeceasedRow() {
+  tickerItems.push('');
+  buildDeceasedPanel();
+  // focus روی آخرین input
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('.deceased-row input');
+    if (inputs.length) inputs[inputs.length-1].focus();
+  }, 100);
+}
+
+function removeDeceasedRow(i) {
+  tickerItems.splice(i, 1);
+  buildDeceasedPanel();
+}
+
+async function saveDeceased() {
+  // جمع‌آوری مقادیر از inputها
+  const inputs = document.querySelectorAll('.deceased-row input');
+  const newList = [...inputs].map(inp => inp.value.trim()).filter(v => v);
+  try {
+    const res = await fetch('/api/deceased', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ adminCode: state.adminCode, list: newList })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    tickerItems = newList;
+    renderTicker();
+    showToast('✅ زیرنویس ذخیره و فعال شد!', 3000);
+  } catch(e) {
+    showToast('❌ خطا: ' + e.message, 3000);
+  }
+}
+
+// ── OVERRIDE joinRoom finish to show ticker & panels ──
+const _origShow = window.show;
+</script>

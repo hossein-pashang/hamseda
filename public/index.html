@@ -72,10 +72,10 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
 .ticker-label{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:#000;font-size:0.72rem;font-weight:800;padding:4px 12px;border-radius:0 20px 20px 0;margin-left:12px;white-space:nowrap;vertical-align:middle;flex-shrink:0}
 .ticker-track{display:inline-flex;align-items:center;white-space:nowrap;animation:ticker-scroll 40s linear infinite}
 .ticker-track:hover{animation-play-state:paused}
-.ticker-item{display:inline-flex;align-items:center;gap:8px;font-size:0.82rem;color:#e5d5a0;padding:0 2rem;font-weight:500}
+.ticker-item{display:inline-flex;align-items:center;gap:8px;font-size:0.88rem;color:#f0e0b0;padding:0 2.5rem;font-weight:500;letter-spacing:0.02em}
 .ticker-item::before{content:'🕯️';font-size:0.85rem}
 .ticker-item::after{content:'•';color:rgba(245,158,11,0.4);margin-right:1rem}
-@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-25%)}}
 
 /* ADMIN DECEASED PANEL */
 .deceased-panel{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:1rem;margin-bottom:1.25rem}
@@ -626,6 +626,7 @@ async function leaveRoom(){
   room=null;participants={};
   state.mic=false;state.hand=false;state.canSpeak=false;state.myIdentity='';
   $('tickerWrap').style.display='none';
+  stopTicker();
   show('home');showToast('🚪 از اتاق خارج شدی');
 }
 
@@ -649,15 +650,28 @@ async function loadTicker() {
 function renderTicker() {
   if (!tickerItems.length) { $('tickerWrap').style.display = 'none'; return; }
   $('tickerWrap').style.display = 'block';
-  // دو بار تکرار برای حلقه بی‌نهایت روان
-  const doubled = [...tickerItems, ...tickerItems];
-  $('tickerTrack').innerHTML = doubled.map(item =>
+
+  const track = $('tickerTrack');
+  // حذف انیمیشن قبلی
+  track.style.animation = 'none';
+  track.innerHTML = '';
+
+  // هر آیتم رو چهار بار تکرار کن تا حلقه کاملاً روان باشه
+  const repeated = [...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems];
+  track.innerHTML = repeated.map(item =>
     `<span class="ticker-item">${escHtml(item)}</span>`
   ).join('');
-  // سرعت بر اساس تعداد کاراکترها
-  const totalLen = tickerItems.join('').length;
-  const duration = Math.max(30, totalLen * 0.4);
-  $('tickerTrack').style.animationDuration = duration + 's';
+
+  // محاسبه عرض کل متن برای سرعت یکنواخت
+  // هر کاراکتر فارسی ~14px، فاصله بین آیتم‌ها ~80px
+  const totalChars = tickerItems.reduce((s, i) => s + i.length, 0);
+  const totalWidth = totalChars * 14 + tickerItems.length * 80;
+  // سرعت ثابت: 80px در ثانیه
+  const duration = Math.max(20, totalWidth / 80);
+
+  // ری‌استارت انیمیشن
+  void track.offsetWidth; // force reflow
+  track.style.animation = `ticker-scroll ${duration}s linear infinite`;
 }
 
 // ── ADMIN DECEASED MANAGEMENT ──

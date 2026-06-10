@@ -115,5 +115,10 @@ app.post('/api/deceased', (req, res) => {
   res.json({ success: true });
 });
 
+
+// endpoint برای UptimeRobot — سرور رو بیدار نگه میداره
+app.get('/ping', (req, res) => {
+  res.json({ status: 'ok', time: new Date().toISOString() });
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ سرور روی پورت ${PORT} اجرا شد`));

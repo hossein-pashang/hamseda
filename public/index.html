@@ -172,7 +172,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
 .chat-input::placeholder{color:var(--txt3)}
 .chat-send-btn{background:var(--acc);color:#fff;border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;flex-shrink:0;transition:all .2s}
 .chat-send-btn:hover{background:var(--acc2)}
-.chat-open-indicator{position:fixed;bottom:166px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-bottom:none;padding:4px 16px;border-radius:12px 12px 0 0;font-size:.72rem;color:var(--txt2);cursor:pointer;z-index:86;display:none;align-items:center;gap:6px}
+.chat-open-indicator{display:none !important}
 /* TICKER */
 .ticker-wrap{position:fixed;left:0;right:0;z-index:80;pointer-events:none}
 .ticker{background:rgba(10,10,10,.95);border-top:1px solid rgba(245,158,11,.4);border-bottom:1px solid rgba(245,158,11,.2);padding:8px 0;overflow:hidden;display:flex;align-items:center;height:36px}
@@ -367,7 +367,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
       <button class="ctrl-btn mic-on" id="micBtn" onclick="toggleMic()"><span class="ci" id="micIco">🎤</span><span id="micLbl">میکروفون</span></button>
       <button class="ctrl-btn" id="handBtn" onclick="toggleHand()"><span class="ci">✋</span><span>دست بلند</span></button>
       <button class="ctrl-btn" id="editTickerBtn" onclick="togglePanel('decPanelBody','decPanelIcon');scrollTo('deceasedPanel')" style="display:none"><span class="ci">🕯️</span><span>اسامی</span></button>
-      <button class="ctrl-btn" id="chatBtn" onclick="toggleChat()"><span class="ci">💬</span><span id="chatBtnLbl">چت</span></button>
+      <button class="ctrl-btn" id="chatBtn" onclick="toggleChat()"><span class="ci" id="chatBtnIco">💬</span><span id="chatBtnLbl">چت</span></button>
       <button class="ctrl-btn" onclick="sendReaction()"><span class="ci">🤲</span><span>دعا</span></button>
       <button class="ctrl-btn danger" onclick="leaveRoom()"><span class="ci">🚪</span><span>خروج</span></button>
     </div>
@@ -508,14 +508,13 @@ function toggleChat() {
     chatUnreadCount = 0;
     updateChatUnread();
     scrollChatBottom();
-    indicator.style.display = 'none';
     // ticker بره بالای چت + کنترل‌ها
     const chatHeight = 240 + 38 + 46; // chat-body + input-row + header
     $('tickerWrap').style.bottom = (130 + chatHeight) + 'px';
   } else {
-    indicator.style.display = 'flex';
-    // ticker برگرده بالای ticker indicator
-    $('tickerWrap').style.bottom = '166px';
+    if($('chatBtnIco')) $('chatBtnIco').textContent = '💬';
+    updateChatUnread();
+    $('tickerWrap').style.bottom = '130px';
   }
 }
 
@@ -588,7 +587,7 @@ function initChat() {
   if (!room) return;
   // نمایش المان‌های چت فقط داخل اتاق
   $('chatPanel').style.display = 'block';
-  $('chatIndicator').style.display = 'flex';
+  // indicator دیگه استفاده نمیشه
   // گوش دادن به پیام‌های Data Channel
   room.on(LivekitClient.RoomEvent.DataReceived, (data, participant) => {
     try {
@@ -608,7 +607,7 @@ function resetChat() {
   chatMessages = [];
   $('chatPanel').classList.remove('open');
   $('chatPanel').style.display = 'none'; // مخفی کن
-  $('chatIndicator').style.display = 'none'; // مخفی کن
+  // indicator حذف شد
   $('tickerWrap').style.display = 'none';
   $('chatBody').innerHTML = '<div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">💬 چت شروع کنید...<br/>پیام‌ها فقط در طول جلسه نگه داشته میشن</div>';
   updateChatUnread();
@@ -825,7 +824,7 @@ async function joinRoom(){
     room.remoteParticipants.forEach(p=>addRemote(p));
     setLoading(false);show('room');
     // تنظیم ticker position بالای controls
-    $('tickerWrap').style.bottom='166px'; // بالای chat indicator
+    $('tickerWrap').style.bottom='130px';
     $('adminPanel').style.display=state.isAdmin?'block':'none';
     $('deceasedPanel').style.display=state.isAdmin?'block':'none';
     $('editTickerBtn').style.display=state.isAdmin?'flex':'none';
@@ -981,14 +980,11 @@ function toggleChat() {
     chatUnreadCount = 0;
     updateChatUnread();
     scrollChatBottom();
-    indicator.style.display = 'none';
     // ticker بره بالای چت + کنترل‌ها
     const chatHeight = 240 + 38 + 46; // chat-body + input-row + header
     $('tickerWrap').style.bottom = (130 + chatHeight) + 'px';
   } else {
-    indicator.style.display = 'flex';
-    // ticker برگرده بالای ticker indicator
-    $('tickerWrap').style.bottom = '166px';
+    $('tickerWrap').style.bottom = '130px';
   }
 }
 
@@ -1061,7 +1057,7 @@ function initChat() {
   if (!room) return;
   // نمایش المان‌های چت فقط داخل اتاق
   $('chatPanel').style.display = 'block';
-  $('chatIndicator').style.display = 'flex';
+  // indicator دیگه استفاده نمیشه
   // گوش دادن به پیام‌های Data Channel
   room.on(LivekitClient.RoomEvent.DataReceived, (data, participant) => {
     try {
@@ -1081,7 +1077,7 @@ function resetChat() {
   chatMessages = [];
   $('chatPanel').classList.remove('open');
   $('chatPanel').style.display = 'none'; // مخفی کن
-  $('chatIndicator').style.display = 'none'; // مخفی کن
+  // indicator حذف شد
   $('tickerWrap').style.display = 'none';
   $('chatBody').innerHTML = '<div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">💬 چت شروع کنید...<br/>پیام‌ها فقط در طول جلسه نگه داشته میشن</div>';
   updateChatUnread();

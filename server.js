@@ -111,5 +111,19 @@ app.post('/api/prayer', (req,res) => {
   res.json({success:true});
 });
 
+
+// ── جلوگیری از خواب سرور ──
+const APP_URL = process.env.APP_URL || 'https://hamseda.onrender.com';
+setInterval(async () => {
+  try {
+    const https = require('https');
+    https.get(APP_URL + '/ping', (res) => {
+      console.log('💓 keepalive ping:', res.statusCode);
+    }).on('error', (e) => {
+      console.log('keepalive error:', e.message);
+    });
+  } catch(e) {}
+}, 10 * 60 * 1000); // هر ۱۰ دقیقه
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ سرور روی پورت ${PORT}`));

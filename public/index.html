@@ -147,7 +147,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
 .font-size-label{font-size:.75rem;color:var(--txt3);min-width:40px;text-align:center}
 
 /* CHAT PANEL */
-.chat-panel{position:fixed;bottom:130px;left:0;right:0;z-index:95;transition:transform .3s ease;transform:translateY(100%)}
+.chat-panel{position:fixed;bottom:130px;left:0;right:0;z-index:85;transition:transform .3s ease;transform:translateY(100%)}
 .chat-panel.open{transform:translateY(0)}
 .chat-header{background:var(--bg2);border-top:1px solid var(--border);padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
 .chat-header-title{font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:6px;color:var(--txt)}
@@ -172,9 +172,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
 .chat-input::placeholder{color:var(--txt3)}
 .chat-send-btn{background:var(--acc);color:#fff;border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;flex-shrink:0;transition:all .2s}
 .chat-send-btn:hover{background:var(--acc2)}
-.chat-open-indicator{position:fixed;bottom:130px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-bottom:none;padding:4px 16px;border-radius:12px 12px 0 0;font-size:.72rem;color:var(--txt2);cursor:pointer;z-index:94;display:none;align-items:center;gap:6px}
+.chat-open-indicator{position:fixed;bottom:166px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-bottom:none;padding:4px 16px;border-radius:12px 12px 0 0;font-size:.72rem;color:var(--txt2);cursor:pointer;z-index:86;display:none;align-items:center;gap:6px}
 /* TICKER */
-.ticker-wrap{position:fixed;left:0;right:0;z-index:90;pointer-events:none}
+.ticker-wrap{position:fixed;left:0;right:0;z-index:80;pointer-events:none}
 .ticker{background:rgba(10,10,10,.95);border-top:1px solid rgba(245,158,11,.4);border-bottom:1px solid rgba(245,158,11,.2);padding:8px 0;overflow:hidden;display:flex;align-items:center;height:36px}
 .ticker-label-box{flex-shrink:0;background:var(--gold);color:#000;font-size:.68rem;font-weight:800;padding:4px 12px;white-space:nowrap;height:100%;display:flex;align-items:center}
 .ticker-viewport{flex:1;overflow:hidden;position:relative;height:100%}
@@ -508,12 +508,13 @@ function toggleChat() {
     updateChatUnread();
     scrollChatBottom();
     indicator.style.display = 'none';
-    // تنظیم ticker و panel بالای چت
-    const chatHeight = 240 + 36 + 44; // body + input + header
+    // ticker بره بالای چت + کنترل‌ها
+    const chatHeight = 240 + 38 + 46; // chat-body + input-row + header
     $('tickerWrap').style.bottom = (130 + chatHeight) + 'px';
   } else {
     indicator.style.display = 'flex';
-    $('tickerWrap').style.bottom = '130px';
+    // ticker برگرده بالای ticker indicator
+    $('tickerWrap').style.bottom = '166px';
   }
 }
 
@@ -781,6 +782,7 @@ async function saveDeceased(){
 
 // ── JOIN ROOM ──
 async function joinRoom(){
+  state.intentionalLeave = false; // اجازه reconnect در این session
   setLoading(true,'در حال گرفتن مجوز...');
   try{
     const res=await fetch('/api/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userName:state.user.name,adminCode:state.isAdmin?state.adminCode:''})});
@@ -798,8 +800,14 @@ async function joinRoom(){
     room.on(LivekitClient.RoomEvent.TrackMuted,()=>renderAll());
     room.on(LivekitClient.RoomEvent.TrackUnmuted,()=>renderAll());
     room.on(LivekitClient.RoomEvent.Disconnected,(reason)=>{
-      if(reason&&reason!=='CLIENT_INITIATED'){showToast('🔌 اتصال قطع شد — دوباره امتحان...',3000);setTimeout(()=>joinRoom(),3000)}
-      else{stopTicker();$('tickerWrap').style.display='none';show('home');showToast('🚪 خارج شدی')}
+      // فقط اگه غیرعمدی قطع شد دوباره وصل میشه — نه موقع خروج دستی
+      if(!state.intentionalLeave && reason && reason !== 'CLIENT_INITIATED'){
+        showToast('🔌 اتصال قطع شد — دوباره امتحان...',3000);
+        setTimeout(()=>{if(!state.intentionalLeave)joinRoom()},3000);
+      } else {
+        stopTicker();$('tickerWrap').style.display='none';
+        show('home');
+      }
     });
     let connected=false;
     for(let i=1;i<=3;i++){
@@ -813,8 +821,7 @@ async function joinRoom(){
     room.remoteParticipants.forEach(p=>addRemote(p));
     setLoading(false);show('room');
     // تنظیم ticker position بالای controls
-    const tickerBottom=document.querySelector('.room-controls')?.offsetHeight||130;
-    $('tickerWrap').style.bottom=tickerBottom+'px';
+    $('tickerWrap').style.bottom='166px'; // بالای chat indicator
     $('adminPanel').style.display=state.isAdmin?'block':'none';
     $('deceasedPanel').style.display=state.isAdmin?'block':'none';
     $('editTickerBtn').style.display=state.isAdmin?'flex':'none';
@@ -914,11 +921,13 @@ async function toggleHand(){
 const reactions=['🤲','🌹','❤️','🕊️','🙏','💐','☮️'];let ri=0;
 function sendReaction(){showToast(reactions[ri%reactions.length]+' فرستادی');ri++}
 async function leaveRoom(){
+  state.intentionalLeave = true; // جلوگیری از reconnect خودکار
   if(pollInt){clearInterval(pollInt);pollInt=null}
   stopTicker();$('tickerWrap').style.display='none';
   if(state.hand&&state.myIdentity)await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:state.myIdentity,raised:false})}).catch(()=>{});
   if(room){try{await room.disconnect()}catch(e){}}
   room=null;participants={};state.mic=false;state.hand=false;state.canSpeak=false;state.myIdentity='';
+  state.intentionalLeave=false;
   resetChat();
   show('home');showToast('🚪 از اتاق خارج شدی');
 }
@@ -969,12 +978,13 @@ function toggleChat() {
     updateChatUnread();
     scrollChatBottom();
     indicator.style.display = 'none';
-    // تنظیم ticker و panel بالای چت
-    const chatHeight = 240 + 36 + 44; // body + input + header
+    // ticker بره بالای چت + کنترل‌ها
+    const chatHeight = 240 + 38 + 46; // chat-body + input-row + header
     $('tickerWrap').style.bottom = (130 + chatHeight) + 'px';
   } else {
     indicator.style.display = 'flex';
-    $('tickerWrap').style.bottom = '130px';
+    // ticker برگرده بالای ticker indicator
+    $('tickerWrap').style.bottom = '166px';
   }
 }
 

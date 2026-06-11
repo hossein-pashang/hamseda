@@ -145,6 +145,34 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
 .font-btn{background:var(--bg3);border:1px solid var(--border);color:var(--txt2);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;font-family:'Vazirmatn',sans-serif}
 .font-btn:hover{border-color:var(--gold);color:var(--gold)}
 .font-size-label{font-size:.75rem;color:var(--txt3);min-width:40px;text-align:center}
+
+/* CHAT PANEL */
+.chat-panel{position:fixed;bottom:130px;left:0;right:0;z-index:95;transition:transform .3s ease;transform:translateY(100%)}
+.chat-panel.open{transform:translateY(0)}
+.chat-header{background:var(--bg2);border-top:1px solid var(--border);padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.chat-header-title{font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:6px;color:var(--txt)}
+.chat-unread{background:var(--acc);color:#fff;font-size:.65rem;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+.chat-close-btn{font-size:.75rem;color:var(--txt3);background:none;border:none;cursor:pointer;font-family:'Vazirmatn',sans-serif}
+.chat-body{background:var(--bg);height:240px;overflow-y:auto;padding:.75rem;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin;scrollbar-color:var(--bg3) transparent}
+.chat-body::-webkit-scrollbar{width:3px}
+.chat-body::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+.chat-msg{display:flex;flex-direction:column;max-width:80%}
+.chat-msg.me{align-self:flex-start}
+.chat-msg.other{align-self:flex-end}
+.chat-bubble{padding:7px 12px;border-radius:16px;font-size:.82rem;line-height:1.5;word-break:break-word}
+.chat-msg.me .chat-bubble{background:var(--acc);color:#fff;border-bottom-right-radius:4px}
+.chat-msg.other .chat-bubble{background:var(--bg3);color:var(--txt);border-bottom-left-radius:4px}
+.chat-sender{font-size:.65rem;color:var(--txt3);margin-bottom:2px}
+.chat-msg.me .chat-sender{text-align:right;color:var(--acc2)}
+.chat-time{font-size:.6rem;color:var(--txt3);margin-top:2px;text-align:left}
+.chat-msg.me .chat-time{text-align:right}
+.chat-input-row{background:var(--bg2);border-top:1px solid var(--border);padding:.6rem .75rem;display:flex;gap:8px;align-items:center}
+.chat-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--txt);padding:.6rem .9rem;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:.85rem;outline:none}
+.chat-input:focus{border-color:var(--acc)}
+.chat-input::placeholder{color:var(--txt3)}
+.chat-send-btn{background:var(--acc);color:#fff;border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;flex-shrink:0;transition:all .2s}
+.chat-send-btn:hover{background:var(--acc2)}
+.chat-open-indicator{position:fixed;bottom:130px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border);border-bottom:none;padding:4px 16px;border-radius:12px 12px 0 0;font-size:.72rem;color:var(--txt2);cursor:pointer;z-index:94;display:none;align-items:center;gap:6px}
 /* TICKER */
 .ticker-wrap{position:fixed;left:0;right:0;z-index:90;pointer-events:none}
 .ticker{background:rgba(10,10,10,.95);border-top:1px solid rgba(245,158,11,.4);border-bottom:1px solid rgba(245,158,11,.2);padding:8px 0;overflow:hidden;display:flex;align-items:center;height:36px}
@@ -339,6 +367,7 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
       <button class="ctrl-btn mic-on" id="micBtn" onclick="toggleMic()"><span class="ci" id="micIco">🎤</span><span id="micLbl">میکروفون</span></button>
       <button class="ctrl-btn" id="handBtn" onclick="toggleHand()"><span class="ci">✋</span><span>دست بلند</span></button>
       <button class="ctrl-btn" id="editTickerBtn" onclick="togglePanel('decPanelBody','decPanelIcon');scrollTo('deceasedPanel')" style="display:none"><span class="ci">🕯️</span><span>اسامی</span></button>
+      <button class="ctrl-btn" id="chatBtn" onclick="toggleChat()"><span class="ci">💬</span><span id="chatBtnLbl">چت</span></button>
       <button class="ctrl-btn" onclick="sendReaction()"><span class="ci">🤲</span><span>دعا</span></button>
       <button class="ctrl-btn danger" onclick="leaveRoom()"><span class="ci">🚪</span><span>خروج</span></button>
     </div>
@@ -362,6 +391,31 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
 <div class="loading-overlay hidden" id="loadingOverlay">
   <div class="spinner"></div>
   <p style="color:var(--txt2);font-size:.9rem" id="loadingMsg">در حال اتصال...</p>
+</div>
+
+
+<!-- CHAT PANEL -->
+<div class="chat-open-indicator" id="chatIndicator" onclick="toggleChat()">
+  💬 چت اتاق <span class="chat-unread" id="chatUnread2" style="display:none">0</span>
+</div>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header" onclick="toggleChat()">
+    <div class="chat-header-title">
+      💬 چت اتاق
+      <span class="chat-unread" id="chatUnread" style="display:none">0</span>
+    </div>
+    <button class="chat-close-btn">بستن ✕</button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">
+      💬 چت شروع کنید...<br/>پیام‌ها فقط در طول جلسه نگه داشته میشن
+    </div>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" type="text" placeholder="پیام بنویس..." maxlength="200"
+      onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button class="chat-send-btn" onclick="sendChat()">➤</button>
+  </div>
 </div>
 
 <!-- TICKER -->
@@ -436,6 +490,123 @@ function changeFontSize(dir) {
   fontIdx = Math.max(0, Math.min(FONT_SIZES.length-1, fontIdx + dir));
   $('roomPrayerText').style.fontSize = FONT_SIZES[fontIdx];
   $('fontSizeLabel').textContent = FONT_LABELS[fontIdx];
+}
+
+
+// ── CHAT ──
+let chatOpen = false;
+let chatUnreadCount = 0;
+let chatMessages = [];
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const panel = $('chatPanel');
+  const indicator = $('chatIndicator');
+  panel.classList.toggle('open', chatOpen);
+  if (chatOpen) {
+    chatUnreadCount = 0;
+    updateChatUnread();
+    scrollChatBottom();
+    indicator.style.display = 'none';
+    // تنظیم ticker و panel بالای چت
+    const chatHeight = 240 + 36 + 44; // body + input + header
+    $('tickerWrap').style.bottom = (130 + chatHeight) + 'px';
+  } else {
+    indicator.style.display = 'flex';
+    $('tickerWrap').style.bottom = '130px';
+  }
+}
+
+function updateChatUnread() {
+  const show = chatUnreadCount > 0;
+  $('chatUnread').style.display = show ? 'flex' : 'none';
+  $('chatUnread').textContent = chatUnreadCount;
+  $('chatUnread2').style.display = show ? 'flex' : 'none';
+  $('chatUnread2').textContent = chatUnreadCount;
+  $('chatBtnLbl').textContent = show ? `چت (${chatUnreadCount})` : 'چت';
+}
+
+async function sendChat() {
+  if (!room) return;
+  const input = $('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  const msg = {
+    type: 'chat',
+    text,
+    sender: state.user.name,
+    time: new Date().toLocaleTimeString('fa-IR', {hour:'2-digit',minute:'2-digit'}),
+    isMe: true
+  };
+
+  // نمایش پیام خودم
+  addChatMessage(msg);
+
+  // ارسال به بقیه از طریق LiveKit Data Channel
+  try {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify({type:'chat', text, sender:state.user.name, time:msg.time}));
+    await room.localParticipant.publishData(data, {reliable: true});
+  } catch(e) {
+    console.error('chat send error:', e);
+  }
+}
+
+function addChatMessage(msg) {
+  chatMessages.push(msg);
+  const body = $('chatBody');
+
+  // پاک کردن پیام خوش‌آمد
+  if (chatMessages.length === 1) body.innerHTML = '';
+
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (msg.isMe ? 'me' : 'other');
+  div.innerHTML = `
+    ${!msg.isMe ? `<div class="chat-sender">${escHtml(msg.sender)}</div>` : ''}
+    <div class="chat-bubble">${escHtml(msg.text)}</div>
+    <div class="chat-time">${msg.time}</div>`;
+  body.appendChild(div);
+
+  if (!chatOpen) {
+    chatUnreadCount++;
+    updateChatUnread();
+  } else {
+    scrollChatBottom();
+  }
+}
+
+function scrollChatBottom() {
+  const body = $('chatBody');
+  setTimeout(() => body.scrollTop = body.scrollHeight, 50);
+}
+
+function initChat() {
+  if (!room) return;
+  // گوش دادن به پیام‌های Data Channel
+  room.on(LivekitClient.RoomEvent.DataReceived, (data, participant) => {
+    try {
+      const decoder = new TextDecoder();
+      const msg = JSON.parse(decoder.decode(data));
+      if (msg.type === 'chat') {
+        addChatMessage({...msg, isMe: false});
+        showToast('💬 ' + msg.sender + ': ' + msg.text.substring(0,30) + (msg.text.length>30?'...':''), 2000);
+      }
+    } catch(e) {}
+  });
+  // نمایش indicator
+  $('chatIndicator').style.display = 'flex';
+}
+
+function resetChat() {
+  chatOpen = false;
+  chatUnreadCount = 0;
+  chatMessages = [];
+  $('chatPanel').classList.remove('open');
+  $('chatIndicator').style.display = 'none';
+  $('chatBody').innerHTML = '<div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">💬 چت شروع کنید...<br/>پیام‌ها فقط در طول جلسه نگه داشته میشن</div>';
+  updateChatUnread();
 }
 
 buildAvatarPicker();show('setup')}
@@ -650,6 +821,7 @@ async function joinRoom(){
     updateMicBtn();renderAll();
     $('statusBar').textContent='✅ متصل شدی!';setTimeout(()=>$('statusBar').textContent='',3000);
     loadTicker();if(state.isAdmin)buildDecPanel();
+    initChat();
     startPolling();
   }catch(e){setLoading(false);console.error(e);showToast('❌ '+e.message,4000)}
 }
@@ -747,6 +919,7 @@ async function leaveRoom(){
   if(state.hand&&state.myIdentity)await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:state.myIdentity,raised:false})}).catch(()=>{});
   if(room){try{await room.disconnect()}catch(e){}}
   room=null;participants={};state.mic=false;state.hand=false;state.canSpeak=false;state.myIdentity='';
+  resetChat();
   show('home');showToast('🚪 از اتاق خارج شدی');
 }
 
@@ -778,6 +951,123 @@ function changeFontSize(dir) {
   fontIdx = Math.max(0, Math.min(FONT_SIZES.length-1, fontIdx + dir));
   $('roomPrayerText').style.fontSize = FONT_SIZES[fontIdx];
   $('fontSizeLabel').textContent = FONT_LABELS[fontIdx];
+}
+
+
+// ── CHAT ──
+let chatOpen = false;
+let chatUnreadCount = 0;
+let chatMessages = [];
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const panel = $('chatPanel');
+  const indicator = $('chatIndicator');
+  panel.classList.toggle('open', chatOpen);
+  if (chatOpen) {
+    chatUnreadCount = 0;
+    updateChatUnread();
+    scrollChatBottom();
+    indicator.style.display = 'none';
+    // تنظیم ticker و panel بالای چت
+    const chatHeight = 240 + 36 + 44; // body + input + header
+    $('tickerWrap').style.bottom = (130 + chatHeight) + 'px';
+  } else {
+    indicator.style.display = 'flex';
+    $('tickerWrap').style.bottom = '130px';
+  }
+}
+
+function updateChatUnread() {
+  const show = chatUnreadCount > 0;
+  $('chatUnread').style.display = show ? 'flex' : 'none';
+  $('chatUnread').textContent = chatUnreadCount;
+  $('chatUnread2').style.display = show ? 'flex' : 'none';
+  $('chatUnread2').textContent = chatUnreadCount;
+  $('chatBtnLbl').textContent = show ? `چت (${chatUnreadCount})` : 'چت';
+}
+
+async function sendChat() {
+  if (!room) return;
+  const input = $('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  const msg = {
+    type: 'chat',
+    text,
+    sender: state.user.name,
+    time: new Date().toLocaleTimeString('fa-IR', {hour:'2-digit',minute:'2-digit'}),
+    isMe: true
+  };
+
+  // نمایش پیام خودم
+  addChatMessage(msg);
+
+  // ارسال به بقیه از طریق LiveKit Data Channel
+  try {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify({type:'chat', text, sender:state.user.name, time:msg.time}));
+    await room.localParticipant.publishData(data, {reliable: true});
+  } catch(e) {
+    console.error('chat send error:', e);
+  }
+}
+
+function addChatMessage(msg) {
+  chatMessages.push(msg);
+  const body = $('chatBody');
+
+  // پاک کردن پیام خوش‌آمد
+  if (chatMessages.length === 1) body.innerHTML = '';
+
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (msg.isMe ? 'me' : 'other');
+  div.innerHTML = `
+    ${!msg.isMe ? `<div class="chat-sender">${escHtml(msg.sender)}</div>` : ''}
+    <div class="chat-bubble">${escHtml(msg.text)}</div>
+    <div class="chat-time">${msg.time}</div>`;
+  body.appendChild(div);
+
+  if (!chatOpen) {
+    chatUnreadCount++;
+    updateChatUnread();
+  } else {
+    scrollChatBottom();
+  }
+}
+
+function scrollChatBottom() {
+  const body = $('chatBody');
+  setTimeout(() => body.scrollTop = body.scrollHeight, 50);
+}
+
+function initChat() {
+  if (!room) return;
+  // گوش دادن به پیام‌های Data Channel
+  room.on(LivekitClient.RoomEvent.DataReceived, (data, participant) => {
+    try {
+      const decoder = new TextDecoder();
+      const msg = JSON.parse(decoder.decode(data));
+      if (msg.type === 'chat') {
+        addChatMessage({...msg, isMe: false});
+        showToast('💬 ' + msg.sender + ': ' + msg.text.substring(0,30) + (msg.text.length>30?'...':''), 2000);
+      }
+    } catch(e) {}
+  });
+  // نمایش indicator
+  $('chatIndicator').style.display = 'flex';
+}
+
+function resetChat() {
+  chatOpen = false;
+  chatUnreadCount = 0;
+  chatMessages = [];
+  $('chatPanel').classList.remove('open');
+  $('chatIndicator').style.display = 'none';
+  $('chatBody').innerHTML = '<div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">💬 چت شروع کنید...<br/>پیام‌ها فقط در طول جلسه نگه داشته میشن</div>';
+  updateChatUnread();
 }
 
 buildAvatarPicker();

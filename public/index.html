@@ -130,6 +130,21 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
 .ctrl-btn.mic-off{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:var(--red)}
 .ctrl-btn.raised{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.4);color:var(--gold)}
 .ctrl-btn.danger{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:var(--red)}
+
+/* PRAYER PANEL IN ROOM */
+.prayer-panel{background:linear-gradient(145deg,#1a150a,#111);border:1px solid rgba(245,158,11,.25);border-radius:16px;padding:1.25rem;margin-bottom:1rem}
+.prayer-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;cursor:pointer}
+.prayer-panel-title{font-size:.85rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:6px}
+.prayer-toggle-btn{background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);padding:4px 12px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:.72rem;cursor:pointer}
+.prayer-scroll-box{max-height:280px;overflow-y:auto;background:rgba(0,0,0,.3);border-radius:10px;padding:1rem;scrollbar-width:thin;scrollbar-color:rgba(245,158,11,.3) transparent}
+.prayer-scroll-box::-webkit-scrollbar{width:4px}
+.prayer-scroll-box::-webkit-scrollbar-thumb{background:rgba(245,158,11,.3);border-radius:2px}
+.prayer-bismillah-room{font-size:.95rem;color:var(--gold);text-align:center;margin-bottom:.75rem;font-weight:600}
+.prayer-body-text{font-size:.88rem;line-height:2.4;color:#e5d5a0;white-space:pre-line;text-align:justify}
+.prayer-fontsize-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:.75rem}
+.font-btn{background:var(--bg3);border:1px solid var(--border);color:var(--txt2);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;font-family:'Vazirmatn',sans-serif}
+.font-btn:hover{border-color:var(--gold);color:var(--gold)}
+.font-size-label{font-size:.75rem;color:var(--txt3);min-width:40px;text-align:center}
 /* TICKER */
 .ticker-wrap{position:fixed;left:0;right:0;z-index:90;pointer-events:none}
 .ticker{background:rgba(10,10,10,.95);border-top:1px solid rgba(245,158,11,.4);border-bottom:1px solid rgba(245,158,11,.2);padding:8px 0;overflow:hidden;display:flex;align-items:center;height:36px}
@@ -293,6 +308,25 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
         <button class="dec-save" onclick="saveDeceased()">💾 ذخیره و نمایش</button>
       </div>
     </div>
+    <!-- پنل دعا داخل اتاق -->
+    <div class="prayer-panel" id="roomPrayerPanel">
+      <div class="prayer-panel-header" onclick="toggleRoomPrayer()">
+        <div class="prayer-panel-title">🤲 متن دعا — بکش پایین بخون</div>
+        <button class="prayer-toggle-btn" id="roomPrayerToggleBtn">باز کردن ▼</button>
+      </div>
+      <div id="roomPrayerBody" style="display:none">
+        <div class="prayer-scroll-box" id="roomPrayerScroll">
+          <div class="prayer-bismillah-room">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+          <div class="prayer-body-text" id="roomPrayerText">در حال بارگذاری...</div>
+        </div>
+        <div class="prayer-fontsize-row">
+          <button class="font-btn" onclick="changeFontSize(-1)">−</button>
+          <span class="font-size-label" id="fontSizeLabel">متوسط</span>
+          <button class="font-btn" onclick="changeFontSize(1)">+</button>
+          <span style="font-size:.7rem;color:var(--txt3);margin-right:8px">اندازه متن</span>
+        </div>
+      </div>
+    </div>
     <div class="stage-lbl">🎤 سخنرانان <span class="cnt-badge" id="spkCount">0</span></div>
     <div class="spk-grid" id="speakersGrid"></div>
     <hr class="div"/>
@@ -374,7 +408,37 @@ function buildAvatarPicker(){
 function toggleAdminField(){$('adminCodeField').style.display=$('isAdminCheck').checked?'block':'none'}
 
 // ── AUTH ──
-function showSetup(){buildAvatarPicker();show('setup')}
+function showSetup(){
+// ── PRAYER IN ROOM ──
+const FONT_SIZES = ['.78rem','0.88rem','1rem','1.15rem','1.3rem'];
+const FONT_LABELS = ['کوچک','متوسط','بزرگ','خیلی بزرگ','بسیار بزرگ'];
+let fontIdx = 1;
+
+function toggleRoomPrayer() {
+  const body = $('roomPrayerBody');
+  const btn = $('roomPrayerToggleBtn');
+  const isHidden = body.style.display === 'none';
+  body.style.display = isHidden ? 'block' : 'none';
+  btn.textContent = isHidden ? 'بستن ▲' : 'باز کردن ▼';
+  if (isHidden) loadRoomPrayer();
+}
+
+async function loadRoomPrayer() {
+  try {
+    const res = await fetch('/api/prayer');
+    const d = await res.json();
+    $('roomPrayerText').textContent = d.text || '';
+    $('roomPrayerText').style.fontSize = FONT_SIZES[fontIdx];
+  } catch(e) {}
+}
+
+function changeFontSize(dir) {
+  fontIdx = Math.max(0, Math.min(FONT_SIZES.length-1, fontIdx + dir));
+  $('roomPrayerText').style.fontSize = FONT_SIZES[fontIdx];
+  $('fontSizeLabel').textContent = FONT_LABELS[fontIdx];
+}
+
+buildAvatarPicker();show('setup')}
 function quickGuest(){state.user={name:'مهمان_'+Math.floor(Math.random()*999),av:Math.floor(Math.random()*8)};state.isAdmin=false;loadHome()}
 function saveProfile(){
   const n=$('uName').value.trim();
@@ -684,6 +748,36 @@ async function leaveRoom(){
   if(room){try{await room.disconnect()}catch(e){}}
   room=null;participants={};state.mic=false;state.hand=false;state.canSpeak=false;state.myIdentity='';
   show('home');showToast('🚪 از اتاق خارج شدی');
+}
+
+
+// ── PRAYER IN ROOM ──
+const FONT_SIZES = ['.78rem','0.88rem','1rem','1.15rem','1.3rem'];
+const FONT_LABELS = ['کوچک','متوسط','بزرگ','خیلی بزرگ','بسیار بزرگ'];
+let fontIdx = 1;
+
+function toggleRoomPrayer() {
+  const body = $('roomPrayerBody');
+  const btn = $('roomPrayerToggleBtn');
+  const isHidden = body.style.display === 'none';
+  body.style.display = isHidden ? 'block' : 'none';
+  btn.textContent = isHidden ? 'بستن ▲' : 'باز کردن ▼';
+  if (isHidden) loadRoomPrayer();
+}
+
+async function loadRoomPrayer() {
+  try {
+    const res = await fetch('/api/prayer');
+    const d = await res.json();
+    $('roomPrayerText').textContent = d.text || '';
+    $('roomPrayerText').style.fontSize = FONT_SIZES[fontIdx];
+  } catch(e) {}
+}
+
+function changeFontSize(dir) {
+  fontIdx = Math.max(0, Math.min(FONT_SIZES.length-1, fontIdx + dir));
+  $('roomPrayerText').style.fontSize = FONT_SIZES[fontIdx];
+  $('fontSizeLabel').textContent = FONT_LABELS[fontIdx];
 }
 
 buildAvatarPicker();

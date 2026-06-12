@@ -173,6 +173,9 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
 .chat-send-btn{background:var(--acc);color:#fff;border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;flex-shrink:0;transition:all .2s}
 .chat-send-btn:hover{background:var(--acc2)}
 .chat-open-indicator{display:none !important}
+
+.mute-req-btn{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.25);padding:3px 8px;border-radius:10px;font-family:'Vazirmatn',sans-serif;font-size:.6rem;cursor:pointer;margin-top:2px;transition:all .2s}
+.mute-req-btn:hover{background:rgba(239,68,68,.3)}
 /* TICKER */
 .ticker-wrap{position:fixed;left:0;right:0;z-index:80;pointer-events:none}
 .ticker{background:rgba(10,10,10,.95);border-top:1px solid rgba(245,158,11,.4);border-bottom:1px solid rgba(245,158,11,.2);padding:8px 0;overflow:hidden;display:flex;align-items:center;height:36px}
@@ -494,6 +497,25 @@ function changeFontSize(dir) {
 }
 
 
+
+// ── ADMIN MUTE ──
+async function adminMute(identity, name) {
+  if (!room) return;
+  try {
+    // ارسال دستور میوت از طریق Data Channel
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify({
+      type: 'admin_mute',
+      targetIdentity: identity,
+      adminName: state.user.name
+    }));
+    await room.localParticipant.publishData(data, { reliable: true });
+    showToast('🔇 دستور میوت به ' + name + ' فرستاده شد');
+  } catch(e) {
+    showToast('❌ خطا: ' + e.message);
+  }
+}
+
 // ── CHAT ──
 let chatOpen = false;
 let chatUnreadCount = 0;
@@ -596,6 +618,16 @@ function initChat() {
       if (msg.type === 'chat') {
         addChatMessage({...msg, isMe: false});
         showToast('💬 ' + msg.sender + ': ' + msg.text.substring(0,30) + (msg.text.length>30?'...':''), 2000);
+      } else if (msg.type === 'admin_mute') {
+        // اگه دستور میوت برای من بود
+        if (msg.targetIdentity === state.myIdentity) {
+          room.localParticipant.setMicrophoneEnabled(false);
+          state.mic = false;
+          updateMicBtn();
+          if(participants['local']) participants['local'].muted = true;
+          renderAll();
+          showToast('🔇 مدیر میکروفون شما را خاموش کرد', 4000);
+        }
       }
     } catch(e) {}
   });
@@ -611,6 +643,39 @@ function resetChat() {
   $('tickerWrap').style.display = 'none';
   $('chatBody').innerHTML = '<div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">💬 چت شروع کنید...<br/>پیام‌ها فقط در طول جلسه نگه داشته میشن</div>';
   updateChatUnread();
+}
+
+
+// ── MUTE BY ADMIN (از طریق Data Channel) ──
+async function requestMute(identity, name) {
+  if (!room || !state.isAdmin) return;
+  try {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify({
+      type: 'admin_mute',
+      targetIdentity: identity,
+      adminName: state.user.name
+    }));
+    await room.localParticipant.publishData(data, { reliable: true });
+    showToast('🔇 درخواست میوت به ' + name + ' فرستاده شد');
+  } catch(e) {
+    showToast('❌ خطا در میوت کردن');
+  }
+}
+
+// ── UNMUTE REQUEST ──
+async function requestUnmute(identity, name) {
+  if (!room || !state.isAdmin) return;
+  try {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify({
+      type: 'admin_unmute',
+      targetIdentity: identity,
+      adminName: state.user.name
+    }));
+    await room.localParticipant.publishData(data, { reliable: true });
+    showToast('🔊 درخواست آنمیوت به ' + name + ' فرستاده شد');
+  } catch(e) {}
 }
 
 buildAvatarPicker();show('setup')}
@@ -855,6 +920,7 @@ function renderAll(){
       <div class="p-av ${p.speaking?'speaking':''} ${p.muted?'muted':''}" style="background:${p.av.bg}">${p.av.e}</div>
       <div class="p-name">${escHtml(p.name)}</div>
       <div class="p-role">${p.isMe?'(شما)':p.isAdmin?'مدیر':'سخنران'}</div>
+      ${state.isAdmin&&!p.isMe?`<button onclick="adminMute('${p.identity}','${escHtml(p.name)}')" style="background:rgba(239,68,68,.15);color:var(--red);border:none;padding:3px 8px;border-radius:10px;font-family:'Vazirmatn',sans-serif;font-size:.62rem;cursor:pointer;margin-top:2px">${p.muted?'▶️ آنميوت':'🔇 ميوت'}</button>`:''}
     </div>`).join('')
     :'<p style="color:var(--txt3);font-size:.8rem;grid-column:span 3;text-align:center;padding:1rem">سخنرانی نیست</p>';
   $('audienceGrid').innerHTML=aud.length?aud.map(p=>`
@@ -966,6 +1032,25 @@ function changeFontSize(dir) {
 }
 
 
+
+// ── ADMIN MUTE ──
+async function adminMute(identity, name) {
+  if (!room) return;
+  try {
+    // ارسال دستور میوت از طریق Data Channel
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify({
+      type: 'admin_mute',
+      targetIdentity: identity,
+      adminName: state.user.name
+    }));
+    await room.localParticipant.publishData(data, { reliable: true });
+    showToast('🔇 دستور میوت به ' + name + ' فرستاده شد');
+  } catch(e) {
+    showToast('❌ خطا: ' + e.message);
+  }
+}
+
 // ── CHAT ──
 let chatOpen = false;
 let chatUnreadCount = 0;
@@ -1066,6 +1151,16 @@ function initChat() {
       if (msg.type === 'chat') {
         addChatMessage({...msg, isMe: false});
         showToast('💬 ' + msg.sender + ': ' + msg.text.substring(0,30) + (msg.text.length>30?'...':''), 2000);
+      } else if (msg.type === 'admin_mute') {
+        // اگه دستور میوت برای من بود
+        if (msg.targetIdentity === state.myIdentity) {
+          room.localParticipant.setMicrophoneEnabled(false);
+          state.mic = false;
+          updateMicBtn();
+          if(participants['local']) participants['local'].muted = true;
+          renderAll();
+          showToast('🔇 مدیر میکروفون شما را خاموش کرد', 4000);
+        }
       }
     } catch(e) {}
   });
@@ -1081,6 +1176,39 @@ function resetChat() {
   $('tickerWrap').style.display = 'none';
   $('chatBody').innerHTML = '<div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">💬 چت شروع کنید...<br/>پیام‌ها فقط در طول جلسه نگه داشته میشن</div>';
   updateChatUnread();
+}
+
+
+// ── MUTE BY ADMIN (از طریق Data Channel) ──
+async function requestMute(identity, name) {
+  if (!room || !state.isAdmin) return;
+  try {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify({
+      type: 'admin_mute',
+      targetIdentity: identity,
+      adminName: state.user.name
+    }));
+    await room.localParticipant.publishData(data, { reliable: true });
+    showToast('🔇 درخواست میوت به ' + name + ' فرستاده شد');
+  } catch(e) {
+    showToast('❌ خطا در میوت کردن');
+  }
+}
+
+// ── UNMUTE REQUEST ──
+async function requestUnmute(identity, name) {
+  if (!room || !state.isAdmin) return;
+  try {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify({
+      type: 'admin_unmute',
+      targetIdentity: identity,
+      adminName: state.user.name
+    }));
+    await room.localParticipant.publishData(data, { reliable: true });
+    showToast('🔊 درخواست آنمیوت به ' + name + ' فرستاده شد');
+  } catch(e) {}
 }
 
 buildAvatarPicker();

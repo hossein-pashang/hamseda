@@ -618,6 +618,13 @@ function initChat() {
       if (msg.type === 'chat') {
         addChatMessage({...msg, isMe: false});
         showToast('💬 ' + msg.sender + ': ' + msg.text.substring(0,30) + (msg.text.length>30?'...':''), 2000);
+      } else if (msg.type === 'permission_granted') {
+        // اگه این پیام برای منه فوری میک رو فعال کن
+        if(room && room.localParticipant.identity === msg.targetIdentity){
+          state.canSpeak=true;
+          if(participants['local'])participants['local'].canSpeak=true;
+          enableMyMic();
+        }
       } else if (msg.type === 'admin_mute') {
         // اگه دستور میوت برای من بود
         if (msg.targetIdentity === state.myIdentity) {
@@ -877,12 +884,8 @@ async function joinRoom(){
         show('home');
       }
     });
-    let connected=false;
-    for(let i=1;i<=3;i++){
-      try{setLoading(true,i>1?`تلاش ${i} از ۳...`:'در حال اتصال...');await room.connect(data.wsUrl,data.token);connected=true;break}
-      catch(e){if(i<3)await new Promise(r=>setTimeout(r,2000))}
-    }
-    if(!connected)throw new Error('اتصال برقرار نشد');
+    setLoading(true,'در حال اتصال...');
+    await room.connect(data.wsUrl, data.token);
     state.myIdentity=room.localParticipant.identity;
     if(state.isAdmin){await room.localParticipant.setMicrophoneEnabled(true);state.mic=true;state.canSpeak=true}
     participants['local']={name:state.user.name,av:AVATARS[state.user.av],isAdmin:state.isAdmin,canSpeak:state.isAdmin,muted:!state.mic,speaking:false,handUp:false,isMe:true,identity:state.myIdentity};
@@ -948,25 +951,63 @@ function renderAll(){
 async function startPolling(){if(pollInt)clearInterval(pollInt);await syncState();pollInt=setInterval(syncState,4000)}
 async function syncState(){
   try{
-    const res=await fetch('/api/room-state');const d=await res.json();
+    const res=await fetch('/api/room-state');
+    const d=await res.json();
     Object.values(participants).forEach(p=>{
-      if(p.identity){
-        p.handUp=d.handsUp.includes(p.identity);
-        if(!p.isAdmin){const was=p.canSpeak;p.canSpeak=d.speakers.includes(p.identity);if(p.isMe&&!was&&p.canSpeak)enableMyMic()}
+      if(!p.identity) return;
+      p.handUp = d.handsUp.includes(p.identity);
+      if(!p.isAdmin){
+        const was = p.canSpeak;
+        p.canSpeak = d.speakers.includes(p.identity);
+        // اگه تازه اجازه گرفت و من هستم
+        if(p.isMe && !was && p.canSpeak){
+          console.log('✅ اجازه صحبت گرفتم — فعال کردن میک');
+          enableMyMic();
+        }
       }
     });
     renderAll();
-  }catch(e){}
+  }catch(e){console.error('syncState error:',e);}
 }
 async function enableMyMic(){
   if(!room)return;
-  try{await room.localParticipant.setMicrophoneEnabled(true);state.mic=true;state.canSpeak=true;state.hand=false;$('handBtn').className='ctrl-btn';updateMicBtn();renderAll();showToast('🎤 مدیر اجازه صحبت داد!',4000);await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:state.myIdentity,raised:false})})}catch(e){}
+  try{
+    await room.localParticipant.setMicrophoneEnabled(true);
+    state.mic=true;
+    state.canSpeak=true;
+    state.hand=false;
+    if(participants['local']){
+      participants['local'].muted=false;
+      participants['local'].canSpeak=true;
+    }
+    $('handBtn').className='ctrl-btn';
+    updateMicBtn();
+    renderAll();
+    showToast('🎤 مدیر به شما اجازه صحبت داد!',4000);
+    await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({identity:state.myIdentity,raised:false})});
+  }catch(e){console.error('enableMyMic error:',e);}
 }
 
 // ── ADMIN ──
 async function adminAllow(identity,name){
   if(!state.isAdmin)return;
-  try{await fetch('/api/allow-speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:state.adminCode,targetIdentity:identity,allow:true})});showToast('✅ به '+name+' اجازه داده شد');await syncState()}catch(e){}
+  try{
+    const res=await fetch('/api/allow-speak',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({adminCode:state.adminCode,targetIdentity:identity,allow:true})
+    });
+    const d=await res.json();
+    if(d.error)throw new Error(d.error);
+    showToast('✅ به '+name+' اجازه داده شد');
+    // اطلاع به کاربر از طریق Data Channel
+    if(room){
+      const encoder=new TextEncoder();
+      const data=encoder.encode(JSON.stringify({type:'permission_granted',targetIdentity:identity}));
+      await room.localParticipant.publishData(data,{reliable:true});
+    }
+    await syncState();
+  }catch(e){showToast('❌ خطا: '+e.message)}
 }
 async function adminDeny(identity,name){
   if(!state.isAdmin)return;
@@ -1151,6 +1192,13 @@ function initChat() {
       if (msg.type === 'chat') {
         addChatMessage({...msg, isMe: false});
         showToast('💬 ' + msg.sender + ': ' + msg.text.substring(0,30) + (msg.text.length>30?'...':''), 2000);
+      } else if (msg.type === 'permission_granted') {
+        // اگه این پیام برای منه فوری میک رو فعال کن
+        if(room && room.localParticipant.identity === msg.targetIdentity){
+          state.canSpeak=true;
+          if(participants['local'])participants['local'].canSpeak=true;
+          enableMyMic();
+        }
       } else if (msg.type === 'admin_mute') {
         // اگه دستور میوت برای من بود
         if (msg.targetIdentity === state.myIdentity) {

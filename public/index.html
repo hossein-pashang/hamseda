@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <title>هم‌صدا 🕯️</title>
-<script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.5.4/dist/livekit-client.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;direction:rtl}
@@ -18,191 +18,163 @@ body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--txt);mi
 .app-name{font-size:2.4rem;font-weight:700;background:linear-gradient(90deg,#fff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .app-tag{font-size:1rem;color:var(--txt2);margin:.5rem 0 2.5rem}
 .btn-main{background:var(--acc);color:#fff;border:none;padding:1rem 2rem;border-radius:50px;font-size:1.05rem;font-family:'Vazirmatn',sans-serif;cursor:pointer;font-weight:600;display:block;width:100%;max-width:300px;margin:.5rem auto;transition:all .2s}
-.btn-main:hover{background:var(--acc2);transform:translateY(-2px)}
-.btn-outline{background:transparent;color:var(--txt2);border:1px solid var(--border);padding:.8rem 2rem;border-radius:50px;font-size:.95rem;font-family:'Vazirmatn',sans-serif;cursor:pointer;display:block;width:100%;max-width:300px;margin:.5rem auto;transition:all .2s}
-.btn-outline:hover{border-color:var(--acc);color:var(--acc2)}
+.btn-main:hover{background:var(--acc2)}
+.btn-out{background:transparent;color:var(--txt2);border:1px solid var(--border);padding:.8rem 2rem;border-radius:50px;font-size:.95rem;font-family:'Vazirmatn',sans-serif;cursor:pointer;display:block;width:100%;max-width:300px;margin:.5rem auto}
 /* SETUP */
 #setup{padding:2rem 1.25rem}
-.avatar-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.5rem}
-.av-opt{width:54px;height:54px;border-radius:50%;border:3px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:all .2s}
+.av-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.5rem}
+.av-opt{width:54px;height:54px;border-radius:50%;border:3px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
 .av-opt.sel{border-color:var(--acc);box-shadow:0 0 0 3px rgba(108,99,255,.3)}
-.field{margin-bottom:1.1rem}
+.field{margin-bottom:1rem}
 .field label{display:block;font-size:.85rem;color:var(--txt2);margin-bottom:6px;font-weight:500}
-.field input,.field textarea{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--txt);padding:.85rem 1rem;border-radius:12px;font-family:'Vazirmatn',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s}
+.field input,.field textarea{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--txt);padding:.85rem 1rem;border-radius:12px;font-family:'Vazirmatn',sans-serif;font-size:.95rem;outline:none}
 .field input:focus,.field textarea:focus{border-color:var(--acc)}
 .field input::placeholder,.field textarea::placeholder{color:var(--txt3)}
 /* NAV */
-.nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-shrink:0}
+.nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;flex-shrink:0}
 .nav-logo{font-size:1.2rem;font-weight:700;color:var(--acc2)}
-.avatar-sm{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer}
-.admin-badge{background:rgba(245,158,11,.2);color:var(--gold);font-size:.68rem;padding:3px 8px;border-radius:20px;font-weight:700}
-/* TABS */
-.page-tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
-.page-tab{flex:1;padding:.75rem .5rem;text-align:center;font-size:.72rem;color:var(--txt3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-family:'Vazirmatn',sans-serif}
-.page-tab.active{color:var(--acc2);border-bottom-color:var(--acc2)}
-.page-tab .ti{font-size:1.2rem;display:block;margin-bottom:2px}
-/* HOME BODY */
-.home-body{flex:1;overflow-y:auto;padding:1.25rem;padding-bottom:5rem}
-/* ROOM CARD */
-.fixed-room-card{background:linear-gradient(145deg,#1e1830,#181818);border:1px solid rgba(108,99,255,.25);border-radius:20px;padding:1.75rem 1.5rem;text-align:center;margin-bottom:1.5rem}
-.fixed-room-candle{font-size:3.5rem;margin-bottom:1rem;animation:flicker 2s ease-in-out infinite alternate;display:block}
-@keyframes flicker{0%{filter:brightness(1)}100%{filter:brightness(1.3) drop-shadow(0 0 10px #fbbf24)}}
-.room-title-txt{font-size:1.4rem;font-weight:700;margin-bottom:.5rem}
-.room-topic-txt{font-size:.88rem;color:var(--txt2);margin-bottom:1.25rem;line-height:1.7}
+.av-sm{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.badge-admin{background:rgba(245,158,11,.2);color:var(--gold);font-size:.68rem;padding:3px 8px;border-radius:20px;font-weight:700}
+/* PAGE TABS */
+.ptabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
+.ptab{flex:1;padding:.7rem .4rem;text-align:center;font-size:.68rem;color:var(--txt3);cursor:pointer;border-bottom:2px solid transparent;font-family:'Vazirmatn',sans-serif}
+.ptab.on{color:var(--acc2);border-bottom-color:var(--acc2)}
+.ptab span{font-size:1.1rem;display:block;margin-bottom:2px}
+/* HOME */
+.hbody{flex:1;overflow-y:auto;padding:1.25rem;padding-bottom:5rem}
+.room-card{background:linear-gradient(145deg,#1e1830,#181818);border:1px solid rgba(108,99,255,.25);border-radius:20px;padding:1.75rem 1.5rem;text-align:center;margin-bottom:1.5rem}
+.candle-big{font-size:3.5rem;display:block;margin-bottom:1rem;animation:flicker 2s ease-in-out infinite alternate}
+@keyframes flicker{0%{filter:brightness(1)}100%{filter:brightness(1.4) drop-shadow(0 0 10px #fbbf24)}}
+.room-ttl{font-size:1.4rem;font-weight:700;margin-bottom:.5rem}
+.room-sub{font-size:.88rem;color:var(--txt2);margin-bottom:1.25rem;line-height:1.7}
 .live-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,.12);color:var(--green);font-size:.75rem;padding:5px 14px;border-radius:20px;font-weight:600;margin-bottom:1.25rem}
-.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite}
+.ldot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.join-btn{background:var(--acc);color:#fff;border:none;padding:1rem;border-radius:14px;font-family:'Vazirmatn',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;width:100%;transition:all .2s}
-.join-btn:hover{background:var(--acc2)}
-/* SECTION CARDS */
-.section-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:1rem;cursor:pointer;transition:all .2s}
-.section-card:hover{border-color:var(--acc)}
-.section-card-header{display:flex;align-items:center;justify-content:space-between}
-.section-card-title{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:8px}
-.section-card-desc{font-size:.8rem;color:var(--txt2);margin-top:6px;line-height:1.6}
+.join-btn{background:var(--acc);color:#fff;border:none;padding:1rem;border-radius:14px;font-family:'Vazirmatn',sans-serif;font-size:1.05rem;font-weight:700;cursor:pointer;width:100%}
 /* GALLERY */
-.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem}
-.gallery-item{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:1;background:var(--bg3)}
-.gallery-item img{width:100%;height:100%;object-fit:cover}
-.gallery-item-name{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.7);color:#fff;font-size:.65rem;padding:4px 6px;text-align:center}
-.gallery-item-year{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:var(--gold);font-size:.6rem;padding:2px 6px;border-radius:10px}
-.gallery-add{border:2px dashed var(--border);border-radius:12px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:6px;color:var(--txt3);font-size:.75rem;transition:all .2s}
-.gallery-add:hover{border-color:var(--acc);color:var(--acc2)}
-.gallery-add .ga-icon{font-size:2rem}
-/* MEMORIES */
-.memory-card{background:var(--bg3);border-radius:12px;padding:1rem;margin-bottom:.75rem}
-.memory-author{font-size:.78rem;font-weight:700;color:var(--acc2);margin-bottom:.4rem;display:flex;justify-content:space-between}
-.memory-date{font-size:.68rem;color:var(--txt3)}
-.memory-text{font-size:.88rem;line-height:1.7;color:var(--txt)}
-.memory-form{background:var(--bg3);border-radius:12px;padding:1rem;margin-bottom:1rem}
-.memory-form textarea{resize:none;height:90px}
-/* CANDLES */
-.candle-section{text-align:center;padding:1rem 0}
-.candles-display{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:1rem 0;min-height:80px}
-.candle-flame{display:flex;flex-direction:column;align-items:center;gap:3px;animation:candleAppear .5s ease}
-@keyframes candleAppear{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
-.candle-emoji{font-size:2rem;animation:flicker 1.5s ease-in-out infinite alternate}
-.candle-name{font-size:.6rem;color:var(--txt2);max-width:50px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.light-candle-btn{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;border:none;padding:1rem 2rem;border-radius:50px;font-family:'Vazirmatn',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;margin-top:.5rem}
-.light-candle-btn:hover{transform:scale(1.05)}
-.candle-count{font-size:.85rem;color:var(--txt2);margin-top:.5rem}
+.gg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem}
+.gi{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:1;background:var(--bg3)}
+.gi img{width:100%;height:100%;object-fit:cover}
+.gi-name{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.7);color:#fff;font-size:.63rem;padding:4px 6px;text-align:center}
+.gi-year{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:var(--gold);font-size:.6rem;padding:2px 6px;border-radius:10px}
+.g-add{border:2px dashed var(--border);border-radius:12px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:6px;color:var(--txt3);font-size:.75rem}
 /* PRAYER */
-.prayer-box{background:linear-gradient(145deg,#1a150a,#0f0f0f);border:1px solid rgba(245,158,11,.2);border-radius:16px;padding:1.5rem;text-align:center}
-.prayer-bismillah{font-size:1.1rem;color:var(--gold);margin-bottom:1rem;font-weight:600}
-.prayer-text{font-size:.95rem;line-height:2.2;color:#e5d5a0;white-space:pre-line}
-/* ROOM PAGE */
+.prayer-box{background:linear-gradient(145deg,#1a150a,#111);border:1px solid rgba(245,158,11,.2);border-radius:16px;padding:1.5rem;text-align:center}
+.pr-bismillah{font-size:1rem;color:var(--gold);margin-bottom:1rem;font-weight:600}
+.pr-text{font-size:.95rem;line-height:2.2;color:#e5d5a0;white-space:pre-line}
+/* MEMORY */
+.mc{background:var(--bg3);border-radius:12px;padding:1rem;margin-bottom:.75rem}
+.mc-author{font-size:.75rem;font-weight:700;color:var(--acc2);margin-bottom:.4rem;display:flex;justify-content:space-between}
+.mc-text{font-size:.88rem;line-height:1.7}
+/* CANDLES */
+.candles-wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:1rem 0;min-height:80px}
+.cf{display:flex;flex-direction:column;align-items:center;gap:3px}
+.cf-e{font-size:2rem;animation:flicker 1.5s ease-in-out infinite alternate}
+.cf-n{font-size:.6rem;color:var(--txt2);max-width:50px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.candle-btn{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;border:none;padding:.9rem 2rem;border-radius:50px;font-family:'Vazirmatn',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:block;margin:.5rem auto}
+/* ROOM */
 #room{flex-direction:column}
-.room-header-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 1.25rem;flex-shrink:0}
-.room-hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.rhdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 1.25rem;flex-shrink:0}
+.rhdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .leave-btn{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.2);padding:7px 16px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:.85rem;cursor:pointer;font-weight:600}
 .live-badge{background:rgba(34,197,94,.15);color:var(--green);font-size:.75rem;padding:5px 12px;border-radius:20px;font-weight:700;display:flex;align-items:center;gap:5px}
-.room-page-title{font-size:1.05rem;font-weight:700;margin-bottom:3px}
-.room-page-topic{font-size:.8rem;color:var(--txt2)}
-.room-body{flex:1;overflow-y:auto;padding:1.25rem;padding-bottom:200px}
-.stage-lbl{font-size:.7rem;color:var(--txt3);font-weight:700;letter-spacing:.07em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px}
-.cnt-badge{background:var(--bg3);color:var(--txt2);font-size:.62rem;padding:2px 7px;border-radius:10px}
-.spk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.rbody{flex:1;overflow-y:auto;padding:1.25rem;padding-bottom:160px}
+/* PANELS */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1rem}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:.82rem;font-weight:700}
+.panel-hdr.gold{color:var(--gold)}
+.panel-body{margin-top:.75rem}
+/* STAGE */
+.slbl{font-size:.7rem;color:var(--txt3);font-weight:700;letter-spacing:.06em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px}
+.scnt{background:var(--bg3);color:var(--txt2);font-size:.62rem;padding:2px 7px;border-radius:10px}
+.spk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem;min-height:60px}
 .aud-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem}
-.p-item{display:flex;flex-direction:column;align-items:center;gap:5px;position:relative}
-.p-av{width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:all .3s;border:3px solid transparent;position:relative}
-.p-av.speaking{border-color:var(--green);box-shadow:0 0 0 3px rgba(34,197,94,.2)}
-.p-av.muted::after{content:'🔇';position:absolute;bottom:-2px;right:-2px;font-size:.62rem;background:var(--bg3);border-radius:50%;width:17px;height:17px;display:flex;align-items:center;justify-content:center}
-.p-name{font-size:.7rem;font-weight:600;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:68px}
-.p-role{font-size:.6rem;color:var(--txt3);text-align:center}
-.p-star{position:absolute;top:-4px;left:-4px;font-size:.85rem}
-.aud-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:all .2s}
-.aud-av.hand-up{border:2px solid var(--gold);box-shadow:0 0 8px rgba(245,158,11,.3)}
-.aud-name{font-size:.6rem;color:var(--txt2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
-hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
-/* ADMIN PANEL */
-.admin-panel{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:14px;padding:1rem;margin-bottom:1rem}
-.admin-title{font-size:.78rem;color:var(--gold);font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:6px;justify-content:space-between;cursor:pointer}
-.hand-req{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border-radius:10px;padding:8px 12px;margin-bottom:6px}
+.pi{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
+.pav{width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;border:3px solid transparent;position:relative;transition:all .3s}
+.pav.speaking{border-color:var(--green);box-shadow:0 0 0 3px rgba(34,197,94,.2)}
+.pav.muted::after{content:'🔇';position:absolute;bottom:-2px;right:-2px;font-size:.62rem;background:var(--bg3);border-radius:50%;width:17px;height:17px;display:flex;align-items:center;justify-content:center}
+.pn{font-size:.7rem;font-weight:600;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:68px}
+.pr{font-size:.6rem;color:var(--txt3);text-align:center}
+.pstar{position:absolute;top:-4px;left:-4px;font-size:.85rem}
+.aav{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.aav.hu{border:2px solid var(--gold);box-shadow:0 0 8px rgba(245,158,11,.3)}
+.an{font-size:.6rem;color:var(--txt2);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
+hr.dv{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
+/* MUTE BTN */
+.mute-btn{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.25);padding:3px 8px;border-radius:10px;font-family:'Vazirmatn',sans-serif;font-size:.58rem;cursor:pointer;margin-top:2px}
+/* HAND REQUESTS */
+.hreq{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border-radius:10px;padding:8px 12px;margin-bottom:6px}
 .allow-btn{background:var(--green);color:#fff;border:none;padding:5px 12px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:.72rem;cursor:pointer;font-weight:600}
 .deny-btn{background:rgba(239,68,68,.15);color:var(--red);border:none;padding:5px 10px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:.72rem;cursor:pointer}
-/* CONTROLS */
-.room-controls{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);padding:.8rem 1rem 1.4rem;z-index:100}
-.status-bar{text-align:center;font-size:.72rem;color:var(--txt3);margin-bottom:7px;min-height:16px}
-.ctrl-row{display:flex;gap:6px}
-.ctrl-btn{background:var(--bg3);border:1px solid var(--border);color:var(--txt);border-radius:12px;padding:.65rem .4rem;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;flex:1;font-family:'Vazirmatn',sans-serif;font-size:.62rem;font-weight:500;transition:all .2s;min-width:0}
-.ctrl-btn .ci{font-size:1.25rem}
-.ctrl-btn.mic-on{background:var(--green);border-color:var(--green);color:#fff}
-.ctrl-btn.mic-off{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:var(--red)}
-.ctrl-btn.raised{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.4);color:var(--gold)}
-.ctrl-btn.danger{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:var(--red)}
-
-/* PRAYER PANEL IN ROOM */
-.prayer-panel{background:linear-gradient(145deg,#1a150a,#111);border:1px solid rgba(245,158,11,.25);border-radius:16px;padding:1.25rem;margin-bottom:1rem}
-.prayer-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;cursor:pointer}
-.prayer-panel-title{font-size:.85rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:6px}
-.prayer-toggle-btn{background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);padding:4px 12px;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:.72rem;cursor:pointer}
-.prayer-scroll-box{max-height:280px;overflow-y:auto;background:rgba(0,0,0,.3);border-radius:10px;padding:1rem;scrollbar-width:thin;scrollbar-color:rgba(245,158,11,.3) transparent}
-.prayer-scroll-box::-webkit-scrollbar{width:4px}
-.prayer-scroll-box::-webkit-scrollbar-thumb{background:rgba(245,158,11,.3);border-radius:2px}
-.prayer-bismillah-room{font-size:.95rem;color:var(--gold);text-align:center;margin-bottom:.75rem;font-weight:600}
-.prayer-body-text{font-size:.88rem;line-height:2.4;color:#e5d5a0;white-space:pre-line;text-align:justify}
-.prayer-fontsize-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:.75rem}
-.font-btn{background:var(--bg3);border:1px solid var(--border);color:var(--txt2);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;font-family:'Vazirmatn',sans-serif}
-.font-btn:hover{border-color:var(--gold);color:var(--gold)}
-.font-size-label{font-size:.75rem;color:var(--txt3);min-width:40px;text-align:center}
-
-/* CHAT PANEL */
-.chat-panel{position:fixed;bottom:130px;left:0;right:0;z-index:85;transition:transform .3s ease;transform:translateY(100%)}
-.chat-panel.open{transform:translateY(0)}
-.chat-header{background:var(--bg2);border-top:1px solid var(--border);padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
-.chat-header-title{font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:6px;color:var(--txt)}
-.chat-unread{background:var(--acc);color:#fff;font-size:.65rem;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
-.chat-close-btn{font-size:.75rem;color:var(--txt3);background:none;border:none;cursor:pointer;font-family:'Vazirmatn',sans-serif}
-.chat-body{background:var(--bg);height:240px;overflow-y:auto;padding:.75rem;display:flex;flex-direction:column;gap:6px;scrollbar-width:thin;scrollbar-color:var(--bg3) transparent}
-.chat-body::-webkit-scrollbar{width:3px}
-.chat-body::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
-.chat-msg{display:flex;flex-direction:column;max-width:80%}
-.chat-msg.me{align-self:flex-start}
-.chat-msg.other{align-self:flex-end}
-.chat-bubble{padding:7px 12px;border-radius:16px;font-size:.82rem;line-height:1.5;word-break:break-word}
-.chat-msg.me .chat-bubble{background:var(--acc);color:#fff;border-bottom-right-radius:4px}
-.chat-msg.other .chat-bubble{background:var(--bg3);color:var(--txt);border-bottom-left-radius:4px}
-.chat-sender{font-size:.65rem;color:var(--txt3);margin-bottom:2px}
-.chat-msg.me .chat-sender{text-align:right;color:var(--acc2)}
-.chat-time{font-size:.6rem;color:var(--txt3);margin-top:2px;text-align:left}
-.chat-msg.me .chat-time{text-align:right}
-.chat-input-row{background:var(--bg2);border-top:1px solid var(--border);padding:.6rem .75rem;display:flex;gap:8px;align-items:center}
-.chat-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--txt);padding:.6rem .9rem;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:.85rem;outline:none}
-.chat-input:focus{border-color:var(--acc)}
-.chat-input::placeholder{color:var(--txt3)}
-.chat-send-btn{background:var(--acc);color:#fff;border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;flex-shrink:0;transition:all .2s}
-.chat-send-btn:hover{background:var(--acc2)}
-.chat-open-indicator{display:none !important}
-/* TICKER */
-.ticker-wrap{position:fixed;left:0;right:0;z-index:80;pointer-events:none}
-.ticker{background:rgba(10,10,10,.95);border-top:1px solid rgba(245,158,11,.4);border-bottom:1px solid rgba(245,158,11,.2);padding:8px 0;overflow:hidden;display:flex;align-items:center;height:36px}
-.ticker-label-box{flex-shrink:0;background:var(--gold);color:#000;font-size:.68rem;font-weight:800;padding:4px 12px;white-space:nowrap;height:100%;display:flex;align-items:center}
-.ticker-viewport{flex:1;overflow:hidden;position:relative;height:100%}
-.ticker-inner{display:flex;position:absolute;top:0;left:0;height:100%;align-items:center;white-space:nowrap}
-.ticker-track{display:inline-flex;align-items:center;white-space:nowrap;flex-shrink:0}
-.ticker-item{display:inline-flex;align-items:center;font-size:.78rem;color:#e5d5a0;padding:0 20px;font-weight:500;white-space:nowrap}
-.ticker-item::before{content:"🕯️ "}
-.ticker-sep{color:rgba(245,158,11,.5);padding:0 8px}
+/* PRAYER IN ROOM */
+.pr-scroll{max-height:260px;overflow-y:auto;background:rgba(0,0,0,.3);border-radius:10px;padding:1rem}
+.pr-body{font-size:.88rem;line-height:2.4;color:#e5d5a0;white-space:pre-line}
+.fs-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:.75rem}
+.fs-btn{background:var(--bg3);border:1px solid var(--border);color:var(--txt2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
 /* DECEASED ADMIN */
-.dec-panel{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:14px;padding:1rem;margin-bottom:1rem}
 .dec-row{display:flex;align-items:center;gap:8px;background:var(--bg3);border-radius:8px;padding:7px 10px;margin-bottom:6px}
 .dec-row input{flex:1;background:transparent;border:none;color:var(--txt);font-family:'Vazirmatn',sans-serif;font-size:.8rem;outline:none}
 .dec-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:1rem}
 .dec-add{background:rgba(245,158,11,.12);color:var(--gold);border:1px solid rgba(245,158,11,.25);padding:7px;border-radius:10px;font-family:'Vazirmatn',sans-serif;font-size:.78rem;cursor:pointer;width:100%;margin-bottom:6px}
 .dec-save{background:var(--green);color:#fff;border:none;padding:8px;border-radius:10px;font-family:'Vazirmatn',sans-serif;font-size:.78rem;cursor:pointer;width:100%;font-weight:600}
+/* CONTROLS */
+.rctrl{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);padding:.75rem 1rem 1.4rem;z-index:100}
+.sbar{text-align:center;font-size:.7rem;color:var(--txt3);margin-bottom:6px;min-height:16px}
+.ctrl-row{display:flex;gap:6px}
+.cbtn{background:var(--bg3);border:1px solid var(--border);color:var(--txt);border-radius:12px;padding:.65rem .35rem;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;flex:1;font-family:'Vazirmatn',sans-serif;font-size:.6rem;font-weight:500;transition:all .2s;min-width:0}
+.cbtn .ci{font-size:1.2rem}
+.cbtn.mon{background:var(--green);border-color:var(--green);color:#fff}
+.cbtn.moff{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:var(--red)}
+.cbtn.hup{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.4);color:var(--gold)}
+.cbtn.red{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:var(--red)}
+/* TICKER */
+.ticker-wrap{position:fixed;left:0;right:0;bottom:115px;z-index:90;pointer-events:none}
+.ticker{background:rgba(10,10,10,.95);border-top:1px solid rgba(245,158,11,.4);border-bottom:1px solid rgba(245,158,11,.2);padding:7px 0;overflow:hidden;display:flex;align-items:center;height:34px}
+.tk-lbl{flex-shrink:0;background:var(--gold);color:#000;font-size:.67rem;font-weight:800;padding:4px 12px;white-space:nowrap;height:100%;display:flex;align-items:center}
+.tk-vp{flex:1;overflow:hidden;position:relative;height:100%}
+.tk-inner{display:flex;position:absolute;top:0;left:0;height:100%;align-items:center;white-space:nowrap}
+.tk-track{display:inline-flex;align-items:center;white-space:nowrap;flex-shrink:0}
+.tk-item{display:inline-flex;align-items:center;font-size:.77rem;color:#e5d5a0;padding:0 20px;white-space:nowrap}
+.tk-item::before{content:"🕯️ "}
+.tk-sep{color:rgba(245,158,11,.5);padding:0 8px}
+/* CHAT */
+.chat-wrap{position:fixed;bottom:115px;left:0;right:0;z-index:95;display:none}
+.chat-panel{background:var(--bg2);border-top:1px solid var(--border);transform:translateY(100%);transition:transform .3s}
+.chat-panel.open{transform:translateY(0)}
+.chat-hdr{padding:.6rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);cursor:pointer}
+.chat-hdr-title{font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:6px}
+.chat-ubadge{background:var(--red);color:#fff;font-size:.6rem;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+.chat-body{height:220px;overflow-y:auto;padding:.75rem;display:flex;flex-direction:column;gap:6px}
+.chat-msg{display:flex;flex-direction:column;max-width:78%}
+.chat-msg.me{align-self:flex-start}
+.chat-msg.other{align-self:flex-end}
+.chat-bbl{padding:7px 12px;border-radius:14px;font-size:.82rem;line-height:1.5;word-break:break-word}
+.chat-msg.me .chat-bbl{background:var(--acc);color:#fff;border-bottom-right-radius:3px}
+.chat-msg.other .chat-bbl{background:var(--bg3);border-bottom-left-radius:3px}
+.chat-sndr{font-size:.63rem;color:var(--txt3);margin-bottom:2px}
+.chat-msg.me .chat-sndr{color:var(--acc2)}
+.chat-in-row{padding:.5rem .75rem;display:flex;gap:8px;align-items:center;border-top:1px solid var(--border)}
+.chat-in{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--txt);padding:.55rem .85rem;border-radius:20px;font-family:'Vazirmatn',sans-serif;font-size:.83rem;outline:none}
+.chat-in:focus{border-color:var(--acc)}
+.chat-send{background:var(--acc);color:#fff;border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1rem;flex-shrink:0}
+/* PERM DIALOG */
+.perm-dlg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:600;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.perm-dlg.h{display:none}
+.perm-box{background:var(--bg2);border:1px solid rgba(108,99,255,.4);border-radius:20px;padding:2rem 1.5rem;text-align:center;max-width:300px;width:100%}
+.perm-accept{background:var(--green);color:#fff;border:none;padding:.9rem;border-radius:12px;font-family:'Vazirmatn',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;width:100%;margin-bottom:.5rem}
+.perm-reject{background:transparent;color:var(--txt3);border:1px solid var(--border);padding:.65rem;border-radius:12px;font-family:'Vazirmatn',sans-serif;font-size:.85rem;cursor:pointer;width:100%}
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:flex;align-items:flex-end}
-.modal-overlay.hidden{display:none}
-.modal-sheet{background:var(--bg2);border-radius:20px 20px 0 0;padding:1.5rem 1.25rem 2.5rem;width:100%;border-top:1px solid var(--border);max-height:80vh;overflow-y:auto}
-.modal-handle{width:40px;height:4px;background:var(--bg4);border-radius:2px;margin:0 auto 1.25rem}
-.modal-title{font-size:1.1rem;font-weight:700;margin-bottom:1.25rem}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:flex;align-items:flex-end}
+.modal-ov.h{display:none}
+.modal-sh{background:var(--bg2);border-radius:20px 20px 0 0;padding:1.5rem 1.25rem 2.5rem;width:100%;border-top:1px solid var(--border);max-height:80vh;overflow-y:auto}
+.modal-ttl{font-size:1.1rem;font-weight:700;margin-bottom:1.25rem}
 /* LOADING */
-.loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
-.loading-overlay.hidden{display:none}
-.spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+.ldg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+.ldg.h{display:none}
+.spin{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* TOAST */
-.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--bg3);border:1px solid var(--border);color:var(--txt);padding:10px 22px;border-radius:50px;font-size:.83rem;opacity:0;transition:all .25s;z-index:999;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--bg3);border:1px solid var(--border);color:var(--txt);padding:10px 20px;border-radius:50px;font-size:.82rem;opacity:0;transition:all .25s;z-index:999;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
@@ -214,23 +186,23 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
   <div class="app-name">هم‌صدا</div>
   <p class="app-tag">فضای گفتگوی صوتی خانوادگی</p>
   <button class="btn-main" onclick="showSetup()">ورود و شروع کن 🎉</button>
-  <button class="btn-outline" onclick="quickGuest()">ورود سریع</button>
+  <button class="btn-out" onclick="quickGuest()">ورود سریع</button>
 </div>
 
 <!-- SETUP -->
 <div id="setup" class="screen">
   <div style="padding:2rem 1.25rem;flex:1">
     <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:.5rem">پروفایل خودتو بساز 👤</h2>
-    <p style="color:var(--txt2);font-size:.88rem;margin-bottom:1.5rem">یه اسم و آواتار انتخاب کن</p>
-    <div class="avatar-row" id="avatarRow"></div>
-    <div class="field"><label>اسم یا لقب در خانواده</label><input id="uName" type="text" placeholder="مثلاً: عمو رضا، خاله فاطمه..." maxlength="30"/></div>
+    <p style="color:var(--txt2);font-size:.88rem;margin-bottom:1.5rem">اسم و آواتار انتخاب کن</p>
+    <div class="av-row" id="avRow"></div>
+    <div class="field"><label>اسم در خانواده</label><input id="uName" type="text" placeholder="مثلاً: عمو رضا، خاله فاطمه..." maxlength="30"/></div>
     <label style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;cursor:pointer">
-      <input type="checkbox" id="isAdminCheck" onchange="toggleAdminField()" style="width:18px;height:18px;accent-color:var(--acc)"/>
+      <input type="checkbox" id="adminChk" onchange="$('adminFld').style.display=this.checked?'block':'none'" style="width:18px;height:18px;accent-color:var(--acc)"/>
       <span style="font-size:.9rem;color:var(--txt2)">👑 ورود به عنوان مدیر</span>
     </label>
-    <div class="field" id="adminCodeField" style="display:none"><label>کد مدیر</label><input id="adminCode" type="password" placeholder="کد مدیر را وارد کن"/></div>
+    <div class="field" id="adminFld" style="display:none"><label>کد مدیر</label><input id="adminCode" type="password" placeholder="کد مدیر"/></div>
     <button class="btn-main" style="max-width:100%;margin-top:1rem" onclick="saveProfile()">بریم! 🚀</button>
-    <button class="btn-outline" style="max-width:100%" onclick="show('splash')">برگشت</button>
+    <button class="btn-out" style="max-width:100%" onclick="show('splash')">برگشت</button>
   </div>
 </div>
 
@@ -239,851 +211,530 @@ hr.div{border:none;border-top:1px solid var(--border);margin:.5rem 0 1.25rem}
   <div class="nav">
     <div style="display:flex;align-items:center;gap:8px">
       <div class="nav-logo">🕯️ هم‌صدا</div>
-      <span class="admin-badge" id="adminBadge" style="display:none">👑 مدیر</span>
+      <span class="badge-admin" id="adminBadge" style="display:none">👑 مدیر</span>
     </div>
-    <div class="avatar-sm" id="navAv"></div>
+    <div class="av-sm" id="navAv"></div>
   </div>
-  <div class="page-tabs">
-    <div class="page-tab active" onclick="switchTab('tabVoice')" id="ptVoice"><span class="ti">🎙️</span>اتاق</div>
-    <div class="page-tab" onclick="switchTab('tabGallery')" id="ptGallery"><span class="ti">📸</span>گالری</div>
-    <div class="page-tab" onclick="switchTab('tabPrayer')" id="ptPrayer"><span class="ti">🤲</span>دعا</div>
-    <div class="page-tab" onclick="switchTab('tabMemories')" id="ptMemories"><span class="ti">📝</span>خاطرات</div>
-    <div class="page-tab" onclick="switchTab('tabCandles')" id="ptCandles"><span class="ti">🕯️</span>شمع</div>
+  <div class="ptabs">
+    <div class="ptab on" id="pt0" onclick="stab(0)"><span>🎙️</span>اتاق</div>
+    <div class="ptab" id="pt1" onclick="stab(1)"><span>📸</span>گالری</div>
+    <div class="ptab" id="pt2" onclick="stab(2)"><span>🤲</span>دعا</div>
+    <div class="ptab" id="pt3" onclick="stab(3)"><span>📝</span>خاطرات</div>
+    <div class="ptab" id="pt4" onclick="stab(4)"><span>🕯️</span>شمع</div>
   </div>
-  <div class="home-body">
-    <!-- TAB: اتاق -->
-    <div id="tabVoice">
-      <div style="margin-bottom:1.25rem;margin-top:.25rem">
-        <h2 id="greetTxt" style="font-size:1.25rem;font-weight:600">سلام! 👋</h2>
-        <p style="font-size:.85rem;color:var(--txt2);margin-top:3px">خوش آمدی 🤲</p>
-      </div>
-      <div class="fixed-room-card">
-        <span class="fixed-room-candle">🕯️</span>
-        <div class="room-title-txt">به یاد درگذشتگان</div>
-        <div class="room-topic-txt">فضایی برای یادآوری و دعا برای عزیزانمان</div>
-        <div class="live-pill"><span class="live-dot"></span>اتاق همیشه فعال</div>
+  <div class="hbody">
+    <div id="t0">
+      <div style="margin-bottom:1.25rem;margin-top:.25rem"><h2 id="greetTxt" style="font-size:1.2rem;font-weight:600">سلام! 👋</h2><p style="font-size:.85rem;color:var(--txt2);margin-top:3px">خوش آمدی 🤲</p></div>
+      <div class="room-card">
+        <span class="candle-big">🕯️</span>
+        <div class="room-ttl">به یاد درگذشتگان</div>
+        <div class="room-sub">فضایی برای یادآوری و دعا برای عزیزانمان</div>
+        <div class="live-pill"><span class="ldot"></span>اتاق همیشه فعال</div>
         <button class="join-btn" onclick="joinRoom()">🎙️ ورود به اتاق</button>
       </div>
     </div>
-    <!-- TAB: گالری -->
-    <div id="tabGallery" style="display:none">
-      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.75rem;margin-top:.25rem">📸 گالری عکس درگذشتگان</h3>
-      <div class="gallery-grid" id="galleryGrid"></div>
+    <div id="t1" style="display:none"><h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.75rem">📸 گالری درگذشتگان</h3><div class="gg" id="galleryGrid"></div></div>
+    <div id="t2" style="display:none">
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.75rem">🤲 متن دعا</h3>
+      <div class="prayer-box"><div class="pr-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div><div class="pr-text" id="prayerTxt">...</div></div>
+      <div id="prEditArea" style="display:none;margin-top:1rem"><div class="field"><label>ویرایش متن</label><textarea id="prEditIn" rows="8" style="resize:none"></textarea></div><button class="btn-main" style="max-width:100%" onclick="savePrayer()">💾 ذخیره</button></div>
+      <button id="prEditBtn" style="display:none;margin-top:.75rem" class="btn-out" onclick="togglePrEdit()">✏️ ویرایش دعا</button>
     </div>
-    <!-- TAB: دعا -->
-    <div id="tabPrayer" style="display:none">
-      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.75rem;margin-top:.25rem">🤲 متن دعا</h3>
-      <div class="prayer-box">
-        <div class="prayer-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
-        <div class="prayer-text" id="prayerText">در حال بارگذاری...</div>
-      </div>
-      <div id="prayerEditArea" style="display:none;margin-top:1rem">
-        <div class="field"><label>ویرایش متن دعا</label><textarea id="prayerEditInput" rows="8" style="resize:none"></textarea></div>
-        <button class="btn-main" style="max-width:100%" onclick="savePrayer()">💾 ذخیره</button>
-      </div>
-      <button id="prayerEditBtn" style="display:none;margin-top:.75rem" class="btn-outline" onclick="togglePrayerEdit()">✏️ ویرایش متن دعا</button>
+    <div id="t3" style="display:none">
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.75rem">📝 دفتر خاطرات</h3>
+      <div class="panel" style="margin-bottom:1rem"><div class="field"><label>خاطره‌ات رو بنویس</label><textarea id="memIn" placeholder="یادم میاد که..." rows="4" style="resize:none"></textarea></div><button class="btn-main" style="max-width:100%" onclick="addMemory()">💝 ثبت خاطره</button></div>
+      <div id="memList"></div>
     </div>
-    <!-- TAB: خاطرات -->
-    <div id="tabMemories" style="display:none">
-      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.75rem;margin-top:.25rem">📝 دفتر خاطرات</h3>
-      <div class="memory-form">
-        <div class="field"><label>خاطره‌ای بنویس...</label><textarea id="memoryInput" placeholder="یادم میاد که..." rows="4" style="resize:none"></textarea></div>
-        <button class="btn-main" style="max-width:100%" onclick="addMemory()">💝 ثبت خاطره</button>
-      </div>
-      <div id="memoriesList"></div>
-    </div>
-    <!-- TAB: شمع -->
-    <div id="tabCandles" style="display:none">
-      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem;margin-top:.25rem">🕯️ شمع روشن کن</h3>
+    <div id="t4" style="display:none">
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem">🕯️ شمع مجازی</h3>
       <p style="font-size:.85rem;color:var(--txt2);margin-bottom:1rem">به یاد عزیزانمان شمعی روشن کنیم</p>
-      <div class="candle-section">
-        <div class="candles-display" id="candlesDisplay"></div>
-        <div class="candle-count" id="candleCount"></div>
-        <button class="light-candle-btn" onclick="lightCandle()">🕯️ روشن کردن شمع</button>
-      </div>
+      <div class="candles-wrap" id="candlesWrap"></div>
+      <div style="text-align:center;font-size:.82rem;color:var(--txt2);margin:.5rem 0" id="candleCnt"></div>
+      <button class="candle-btn" onclick="lightCandle()">🕯️ روشن کردن شمع</button>
     </div>
   </div>
 </div>
 
 <!-- ROOM -->
 <div id="room" class="screen">
-  <div class="room-header-bar">
-    <div class="room-hdr-top">
+  <div class="rhdr">
+    <div class="rhdr-top">
       <button class="leave-btn" onclick="leaveRoom()">← خروج</button>
-      <div class="live-badge"><span class="live-dot"></span>زنده</div>
+      <div class="live-badge"><span class="ldot"></span>زنده</div>
     </div>
-    <div class="room-page-title">🕯️ به یاد درگذشتگان</div>
-    <div class="room-page-topic">فضایی برای یادآوری و دعا برای عزیزانمان</div>
+    <div style="font-size:1rem;font-weight:700;margin-bottom:2px">🕯️ به یاد درگذشتگان</div>
+    <div style="font-size:.78rem;color:var(--txt2)">فضایی برای یادآوری و دعا</div>
   </div>
-  <div class="room-body" id="roomBody">
+  <div class="rbody" id="rbody">
     <!-- پانل مدیر -->
-    <div class="admin-panel" id="adminPanel" style="display:none">
-      <div class="admin-title" onclick="togglePanel('adminPanelBody','adminPanelIcon')">
-        <span>👑 پانل مدیر</span><span id="adminPanelIcon">▼</span>
+    <div class="panel" id="adminPanel" style="display:none;border-color:rgba(245,158,11,.2)">
+      <div class="panel-hdr gold" onclick="tog('adminBody','adminIcon')">
+        <span>👑 پانل مدیر — درخواست‌ها</span><span id="adminIcon">▼</span>
       </div>
-      <div id="adminPanelBody">
-        <div id="handRequests"><div style="font-size:.78rem;color:var(--txt3);text-align:center;padding:.5rem">درخواستی نیست ✅</div></div>
+      <div class="panel-body" id="adminBody">
+        <div id="handReqs"><div style="font-size:.75rem;color:var(--txt3);text-align:center;padding:.5rem">درخواستی نیست ✅</div></div>
       </div>
     </div>
-    <!-- پانل اسامی زیرنویس -->
-    <div class="dec-panel" id="deceasedPanel" style="display:none">
-      <div class="admin-title" onclick="togglePanel('decPanelBody','decPanelIcon')">
-        <span>🕯️ اسامی زیرنویس</span><span id="decPanelIcon">▼</span>
+    <!-- پانل اسامی -->
+    <div class="panel" id="decPanel" style="display:none;border-color:rgba(245,158,11,.2)">
+      <div class="panel-hdr gold" onclick="tog('decBody','decIcon')">
+        <span>🕯️ اسامی زیرنویس</span><span id="decIcon">▼</span>
       </div>
-      <div id="decPanelBody">
-        <div id="deceasedListAdmin"></div>
+      <div class="panel-body" id="decBody" style="display:none">
+        <div id="decListAdmin"></div>
         <button class="dec-add" onclick="addDecRow()">➕ افزودن نام</button>
-        <button class="dec-save" onclick="saveDeceased()">💾 ذخیره و نمایش</button>
+        <button class="dec-save" onclick="saveDeceased()">💾 ذخیره</button>
       </div>
     </div>
-    <!-- پنل دعا داخل اتاق -->
-    <div class="prayer-panel" id="roomPrayerPanel">
-      <div class="prayer-panel-header" onclick="toggleRoomPrayer()">
-        <div class="prayer-panel-title">🤲 متن دعا — بکش پایین بخون</div>
-        <button class="prayer-toggle-btn" id="roomPrayerToggleBtn">باز کردن ▼</button>
+    <!-- پنل دعا -->
+    <div class="panel" style="border-color:rgba(245,158,11,.15)">
+      <div class="panel-hdr" style="color:var(--gold)" onclick="tog('prBody','prIcon');if(document.getElementById('prBody').style.display!=='none')loadRoomPrayer()">
+        <span>🤲 متن دعا</span><button style="background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);padding:3px 10px;border-radius:20px;font-family:Vazirmatn,sans-serif;font-size:.7rem;cursor:pointer" id="prIcon">باز کن ▼</button>
       </div>
-      <div id="roomPrayerBody" style="display:none">
-        <div class="prayer-scroll-box" id="roomPrayerScroll">
-          <div class="prayer-bismillah-room">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
-          <div class="prayer-body-text" id="roomPrayerText">در حال بارگذاری...</div>
-        </div>
-        <div class="prayer-fontsize-row">
-          <button class="font-btn" onclick="changeFontSize(-1)">−</button>
-          <span class="font-size-label" id="fontSizeLabel">متوسط</span>
-          <button class="font-btn" onclick="changeFontSize(1)">+</button>
-          <span style="font-size:.7rem;color:var(--txt3);margin-right:8px">اندازه متن</span>
+      <div id="prBody" style="display:none;margin-top:.75rem">
+        <div class="pr-scroll"><div class="pr-body" id="roomPrText">...</div></div>
+        <div class="fs-row">
+          <button class="fs-btn" onclick="chFS(-1)">−</button>
+          <span style="font-size:.72rem;color:var(--txt3);min-width:40px;text-align:center" id="fsLbl">متوسط</span>
+          <button class="fs-btn" onclick="chFS(1)">+</button>
+          <span style="font-size:.68rem;color:var(--txt3)">اندازه متن</span>
         </div>
       </div>
     </div>
-    <div class="stage-lbl">🎤 سخنرانان <span class="cnt-badge" id="spkCount">0</span></div>
-    <div class="spk-grid" id="speakersGrid"></div>
-    <hr class="div"/>
-    <div class="stage-lbl">👂 شنوندگان <span class="cnt-badge" id="audCount">0</span></div>
-    <div class="aud-grid" id="audienceGrid"></div>
+    <!-- سخنرانان -->
+    <div class="slbl">🎤 سخنرانان <span class="scnt" id="spkCnt">0</span></div>
+    <div class="spk-grid" id="spkGrid"></div>
+    <hr class="dv"/>
+    <div class="slbl">👂 شنوندگان <span class="scnt" id="audCnt">0</span></div>
+    <div class="aud-grid" id="audGrid"></div>
   </div>
-  <div class="room-controls">
-    <div class="status-bar" id="statusBar"></div>
+  <!-- CHAT -->
+  <div class="chat-wrap" id="chatWrap">
+    <div class="chat-panel" id="chatPanel">
+      <div class="chat-hdr" onclick="toggleChat()">
+        <div class="chat-hdr-title">💬 چت اتاق <span class="chat-ubadge" id="chatBadge" style="display:none">0</span></div>
+        <span style="font-size:.72rem;color:var(--txt3)">بستن ✕</span>
+      </div>
+      <div class="chat-body" id="chatBody"><div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">💬 چت شروع کنید...</div></div>
+      <div class="chat-in-row">
+        <input class="chat-in" id="chatIn" placeholder="پیام بنویس..." maxlength="200" onkeydown="if(event.key==='Enter')sendChat()"/>
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+  </div>
+  <!-- TICKER -->
+  <div class="ticker-wrap" id="tickerWrap" style="display:none">
+    <div class="ticker">
+      <div class="tk-lbl">🕯️ یاد درگذشتگان</div>
+      <div class="tk-vp"><div class="tk-inner" id="tkInner"><div class="tk-track" id="tkT1"></div><div class="tk-track" id="tkT2"></div></div></div>
+    </div>
+  </div>
+  <!-- CONTROLS -->
+  <div class="rctrl">
+    <div class="sbar" id="sbar"></div>
     <div class="ctrl-row">
-      <button class="ctrl-btn mic-on" id="micBtn" onclick="toggleMic()"><span class="ci" id="micIco">🎤</span><span id="micLbl">میکروفون</span></button>
-      <button class="ctrl-btn" id="handBtn" onclick="toggleHand()"><span class="ci">✋</span><span>دست بلند</span></button>
-      <button class="ctrl-btn" id="editTickerBtn" onclick="togglePanel('decPanelBody','decPanelIcon');scrollTo('deceasedPanel')" style="display:none"><span class="ci">🕯️</span><span>اسامی</span></button>
-      <button class="ctrl-btn" id="chatBtn" onclick="toggleChat()"><span class="ci" id="chatBtnIco">💬</span><span id="chatBtnLbl">چت</span></button>
-      <button class="ctrl-btn" onclick="sendReaction()"><span class="ci">🤲</span><span>دعا</span></button>
-      <button class="ctrl-btn danger" onclick="leaveRoom()"><span class="ci">🚪</span><span>خروج</span></button>
+      <button class="cbtn moff" id="micBtn" onclick="toggleMic()"><span class="ci" id="micIco">🔇</span><span id="micLbl">میکروفون</span></button>
+      <button class="cbtn" id="handBtn" onclick="toggleHand()"><span class="ci">✋</span><span>دست بلند</span></button>
+      <button class="cbtn" onclick="toggleChat()"><span class="ci">💬</span><span id="chatBtnLbl">چت</span></button>
+      <button class="cbtn" onclick="sendReaction()"><span class="ci">🤲</span><span>دعا</span></button>
+      <button class="cbtn red" onclick="leaveRoom()"><span class="ci">🚪</span><span>خروج</span></button>
     </div>
   </div>
 </div>
 
-<!-- GALLERY ADD MODAL -->
-<div class="modal-overlay hidden" id="galleryModal">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title">📸 افزودن عکس به گالری</div>
-    <div class="field"><label>اسم درگذشته</label><input id="gName" type="text" placeholder="نام و نام خانوادگی"/></div>
-    <div class="field"><label>سال تولد - فوت</label><input id="gYear" type="text" placeholder="مثلاً: ۱۳۱۰ - ۱۳۹۵"/></div>
-    <div class="field"><label>انتخاب عکس</label><input id="gPhoto" type="file" accept="image/*" style="background:var(--bg3);border:1px dashed var(--border);color:var(--txt2);cursor:pointer"/></div>
-    <button class="btn-main" style="max-width:100%;margin-top:.5rem" onclick="uploadGallery()">➕ افزودن</button>
-    <button class="btn-outline" style="max-width:100%" onclick="closeModal('galleryModal')">انصراف</button>
+<!-- GALLERY MODAL -->
+<div class="modal-ov h" id="galModal">
+  <div class="modal-sh">
+    <div class="modal-ttl">📸 افزودن عکس</div>
+    <div class="field"><label>اسم</label><input id="gName" type="text" placeholder="نام و نام خانوادگی"/></div>
+    <div class="field"><label>سال‌ها</label><input id="gYear" type="text" placeholder="۱۳۱۰ - ۱۳۹۵"/></div>
+    <div class="field"><label>عکس</label><input id="gPhoto" type="file" accept="image/*" style="background:var(--bg3);border:1px dashed var(--border);color:var(--txt2);cursor:pointer;padding:.5rem;border-radius:10px"/></div>
+    <button class="btn-main" style="max-width:100%;margin-top:.5rem" onclick="uploadGal()">➕ افزودن</button>
+    <button class="btn-out" style="max-width:100%" onclick="$('galModal').classList.add('h')">انصراف</button>
+  </div>
+</div>
+
+<!-- PERM DIALOG -->
+<div class="perm-dlg h" id="permDlg">
+  <div class="perm-box">
+    <div style="font-size:3rem;margin-bottom:1rem">🎤</div>
+    <div style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem">اجازه صحبت</div>
+    <div style="font-size:.85rem;color:var(--txt2);margin-bottom:1.5rem;line-height:1.7">مدیر به شما اجازه صحبت داد!<br/>میکروفون را روشن کنید.</div>
+    <button class="perm-accept" onclick="acceptMic()">✅ روشن کردن میکروفون</button>
+    <button class="perm-reject" onclick="$('permDlg').classList.add('h')">فعلاً نه</button>
   </div>
 </div>
 
 <!-- LOADING -->
-<div class="loading-overlay hidden" id="loadingOverlay">
-  <div class="spinner"></div>
-  <p style="color:var(--txt2);font-size:.9rem" id="loadingMsg">در حال اتصال...</p>
-</div>
-
-
-
-  <!-- CHAT PANEL — فقط داخل اتاق -->
-  <div class="chat-open-indicator" id="chatIndicator" onclick="toggleChat()" style="display:none">
-    💬 چت اتاق <span class="chat-unread" id="chatUnread2" style="display:none">0</span>
-  </div>
-  <div class="chat-panel" id="chatPanel" style="display:none">
-    <div class="chat-header" onclick="toggleChat()">
-      <div class="chat-header-title">
-        💬 چت اتاق
-        <span class="chat-unread" id="chatUnread" style="display:none">0</span>
-      </div>
-      <button class="chat-close-btn">بستن ✕</button>
-    </div>
-    <div class="chat-body" id="chatBody">
-      <div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">
-        💬 چت شروع کنید...<br/>پیام‌ها فقط در طول جلسه نگه داشته میشن
-      </div>
-    </div>
-    <div class="chat-input-row">
-      <input class="chat-input" id="chatInput" type="text" placeholder="پیام بنویس..." maxlength="200"
-        onkeydown="if(event.key==='Enter')sendChat()"/>
-      <button class="chat-send-btn" onclick="sendChat()">➤</button>
-    </div>
-  </div>
-
-<!-- TICKER -->
-<div class="ticker-wrap" id="tickerWrap" style="display:none">
-  <div class="ticker">
-    <div class="ticker-label-box">🕯️ یاد درگذشتگان</div>
-    <div class="ticker-viewport">
-      <div class="ticker-inner" id="tickerInner">
-        <div class="ticker-track" id="tickerTrack"></div>
-        <div class="ticker-track" id="tickerTrack2"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
+<div class="ldg h" id="ldg"><div class="spin"></div><p style="color:var(--txt2);font-size:.9rem" id="ldgMsg">در حال اتصال...</p></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const AVATARS=[{bg:'#6c63ff',e:'👴'},{bg:'#059669',e:'👵'},{bg:'#dc2626',e:'🧔'},{bg:'#d97706',e:'👩'},{bg:'#7c3aed',e:'🧑'},{bg:'#0891b2',e:'👦'},{bg:'#be185d',e:'👧'},{bg:'#b45309',e:'👱'}];
-let state={user:{name:'',av:0},isAdmin:false,adminCode:'',mic:false,hand:false,canSpeak:false,selAv:0,myIdentity:''};
-let room=null,participants={},pollInt=null;
-let tickerAnim=null,tickerOffset=0,tickerWidth=0,lastTime=null;
-const SPEED=55;
+const AVS=[{bg:'#6c63ff',e:'👴'},{bg:'#059669',e:'👵'},{bg:'#dc2626',e:'🧔'},{bg:'#d97706',e:'👩'},{bg:'#7c3aed',e:'🧑'},{bg:'#0891b2',e:'👦'},{bg:'#be185d',e:'👧'},{bg:'#b45309',e:'👱'}];
+let S={user:{name:'',av:0},isAdmin:false,adminCode:'',mic:false,hand:false,canSpeak:false,selAv:0,myId:'',leaving:false};
+let room=null,parts={},pollT=null,tkAnim=null,tkOff=0,tkW=0,tkLast=null,chatOpen=false,chatUnread=0,chatMsgs=[],fsIdx=1;
+const FS=['.78rem','.9rem','1rem','1.15rem','1.3rem'],FL=['کوچک','متوسط','بزرگ','خیلی بزرگ','بسیار بزرگ'],SPD=55;
 
 function $(id){return document.getElementById(id)}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active')}
-function showToast(msg,dur=2500){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
-function setLoading(on,msg=''){$('loadingOverlay').classList.toggle('hidden',!on);$('loadingMsg').textContent=msg}
-function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function closeModal(id){$(id).classList.add('hidden')}
-function scrollTo(id){$(id)?.scrollIntoView({behavior:'smooth',block:'start'})}
-function togglePanel(bodyId,iconId){const b=$(bodyId);const hidden=b.style.display==='none';b.style.display=hidden?'block':'none';if($(iconId))$(iconId).textContent=hidden?'▲':'▼';}
+function toast(msg,d=2500){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d)}
+function ldg(on,msg=''){$(on?'ldg':'ldg').classList.toggle('h',!on);$('ldgMsg').textContent=msg}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function tog(bid,iid){const b=$(bid);const h=b.style.display==='none';b.style.display=h?'block':'none';if($(iid))$(iid).textContent=h?'▲':'▼';}
 
-// ── AVATAR ──
-function buildAvatarPicker(){
-  const row=$('avatarRow');row.innerHTML='';
-  AVATARS.forEach((av,i)=>{
-    const d=document.createElement('div');d.className='av-opt'+(i===0?' sel':'');
-    d.style.background=av.bg;d.textContent=av.e;
-    d.onclick=()=>{document.querySelectorAll('.av-opt').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');state.selAv=i};
-    row.appendChild(d);
-  });
-}
-function toggleAdminField(){$('adminCodeField').style.display=$('isAdminCheck').checked?'block':'none'}
-
-// ── AUTH ──
-function showSetup(){
-// ── PRAYER IN ROOM ──
-const FONT_SIZES = ['.78rem','0.88rem','1rem','1.15rem','1.3rem'];
-const FONT_LABELS = ['کوچک','متوسط','بزرگ','خیلی بزرگ','بسیار بزرگ'];
-let fontIdx = 1;
-
-function toggleRoomPrayer() {
-  const body = $('roomPrayerBody');
-  const btn = $('roomPrayerToggleBtn');
-  const isHidden = body.style.display === 'none';
-  body.style.display = isHidden ? 'block' : 'none';
-  btn.textContent = isHidden ? 'بستن ▲' : 'باز کردن ▼';
-  if (isHidden) loadRoomPrayer();
+// AVATAR
+function buildAv(){
+  const r=$('avRow');r.innerHTML='';
+  AVS.forEach((av,i)=>{const d=document.createElement('div');d.className='av-opt'+(i===0?' sel':'');d.style.background=av.bg;d.textContent=av.e;d.onclick=()=>{document.querySelectorAll('.av-opt').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');S.selAv=i};r.appendChild(d)});
 }
 
-async function loadRoomPrayer() {
-  try {
-    const res = await fetch('/api/prayer');
-    const d = await res.json();
-    $('roomPrayerText').textContent = d.text || '';
-    $('roomPrayerText').style.fontSize = FONT_SIZES[fontIdx];
-  } catch(e) {}
-}
-
-function changeFontSize(dir) {
-  fontIdx = Math.max(0, Math.min(FONT_SIZES.length-1, fontIdx + dir));
-  $('roomPrayerText').style.fontSize = FONT_SIZES[fontIdx];
-  $('fontSizeLabel').textContent = FONT_LABELS[fontIdx];
-}
-
-
-// ── CHAT ──
-let chatOpen = false;
-let chatUnreadCount = 0;
-let chatMessages = [];
-
-function toggleChat() {
-  chatOpen = !chatOpen;
-  const panel = $('chatPanel');
-  const indicator = $('chatIndicator');
-  panel.classList.toggle('open', chatOpen);
-  if (chatOpen) {
-    chatUnreadCount = 0;
-    updateChatUnread();
-    scrollChatBottom();
-    // ticker بره بالای چت + کنترل‌ها
-    const chatHeight = 240 + 38 + 46; // chat-body + input-row + header
-    $('tickerWrap').style.bottom = (130 + chatHeight) + 'px';
-  } else {
-    if($('chatBtnIco')) $('chatBtnIco').textContent = '💬';
-    updateChatUnread();
-    $('tickerWrap').style.bottom = '130px';
-  }
-}
-
-function updateChatUnread() {
-  const show = chatUnreadCount > 0;
-  $('chatUnread').style.display = show ? 'flex' : 'none';
-  $('chatUnread').textContent = chatUnreadCount;
-  $('chatUnread2').style.display = show ? 'flex' : 'none';
-  $('chatUnread2').textContent = chatUnreadCount;
-  $('chatBtnLbl').textContent = show ? `چت (${chatUnreadCount})` : 'چت';
-}
-
-async function sendChat() {
-  if (!room) return;
-  const input = $('chatInput');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-
-  const msg = {
-    type: 'chat',
-    text,
-    sender: state.user.name,
-    time: new Date().toLocaleTimeString('fa-IR', {hour:'2-digit',minute:'2-digit'}),
-    isMe: true
-  };
-
-  // نمایش پیام خودم
-  addChatMessage(msg);
-
-  // ارسال به بقیه از طریق LiveKit Data Channel
-  try {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(JSON.stringify({type:'chat', text, sender:state.user.name, time:msg.time}));
-    await room.localParticipant.publishData(data, {reliable: true});
-  } catch(e) {
-    console.error('chat send error:', e);
-  }
-}
-
-function addChatMessage(msg) {
-  chatMessages.push(msg);
-  const body = $('chatBody');
-
-  // پاک کردن پیام خوش‌آمد
-  if (chatMessages.length === 1) body.innerHTML = '';
-
-  const div = document.createElement('div');
-  div.className = 'chat-msg ' + (msg.isMe ? 'me' : 'other');
-  div.innerHTML = `
-    ${!msg.isMe ? `<div class="chat-sender">${escHtml(msg.sender)}</div>` : ''}
-    <div class="chat-bubble">${escHtml(msg.text)}</div>
-    <div class="chat-time">${msg.time}</div>`;
-  body.appendChild(div);
-
-  if (!chatOpen) {
-    chatUnreadCount++;
-    updateChatUnread();
-  } else {
-    scrollChatBottom();
-  }
-}
-
-function scrollChatBottom() {
-  const body = $('chatBody');
-  setTimeout(() => body.scrollTop = body.scrollHeight, 50);
-}
-
-function initChat() {
-  if (!room) return;
-  // نمایش المان‌های چت فقط داخل اتاق
-  $('chatPanel').style.display = 'block';
-  // indicator دیگه استفاده نمیشه
-  // گوش دادن به پیام‌های Data Channel
-  room.on(LivekitClient.RoomEvent.DataReceived, (data, participant) => {
-    try {
-      const decoder = new TextDecoder();
-      const msg = JSON.parse(decoder.decode(data));
-      if (msg.type === 'chat') {
-        addChatMessage({...msg, isMe: false});
-        showToast('💬 ' + msg.sender + ': ' + msg.text.substring(0,30) + (msg.text.length>30?'...':''), 2000);
-      }
-    } catch(e) {}
-  });
-}
-
-function resetChat() {
-  chatOpen = false;
-  chatUnreadCount = 0;
-  chatMessages = [];
-  $('chatPanel').classList.remove('open');
-  $('chatPanel').style.display = 'none'; // مخفی کن
-  // indicator حذف شد
-  $('tickerWrap').style.display = 'none';
-  $('chatBody').innerHTML = '<div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">💬 چت شروع کنید...<br/>پیام‌ها فقط در طول جلسه نگه داشته میشن</div>';
-  updateChatUnread();
-}
-
-buildAvatarPicker();show('setup')}
-function quickGuest(){state.user={name:'مهمان_'+Math.floor(Math.random()*999),av:Math.floor(Math.random()*8)};state.isAdmin=false;loadHome()}
+// AUTH
+function showSetup(){buildAv();show('setup')}
+function quickGuest(){S.user={name:'مهمان_'+~~(Math.random()*999),av:~~(Math.random()*8)};S.isAdmin=false;goHome()}
 function saveProfile(){
-  const n=$('uName').value.trim();
-  if(!n){showToast('⚠️ اسمت رو وارد کن!');return}
-  state.user={name:n,av:state.selAv};state.isAdmin=$('isAdminCheck').checked;state.adminCode=$('adminCode').value.trim();
-  loadHome();
+  const n=$('uName').value.trim();if(!n){toast('⚠️ اسمت رو وارد کن!');return}
+  S.user={name:n,av:S.selAv};S.isAdmin=$('adminChk').checked;S.adminCode=$('adminCode').value.trim();goHome();
 }
-function loadHome(){
-  $('greetTxt').textContent='سلام '+state.user.name+' 👋';
-  const av=AVATARS[state.user.av];const navAv=$('navAv');navAv.style.background=av.bg;navAv.textContent=av.e;
-  $('adminBadge').style.display=state.isAdmin?'inline':'none';
-  $('prayerEditBtn').style.display=state.isAdmin?'block':'none';
-  show('home');loadAllData();
+function goHome(){
+  $('greetTxt').textContent='سلام '+S.user.name+' 👋';
+  const av=AVS[S.user.av];$('navAv').style.background=av.bg;$('navAv').textContent=av.e;
+  $('adminBadge').style.display=S.isAdmin?'inline':'none';
+  $('prEditBtn').style.display=S.isAdmin?'block':'none';
+  show('home');loadAll();
 }
 
-// ── TABS ──
-function switchTab(id){
-  ['tabVoice','tabGallery','tabPrayer','tabMemories','tabCandles'].forEach(t=>$(t).style.display='none');
-  ['ptVoice','ptGallery','ptPrayer','ptMemories','ptCandles'].forEach(t=>$(t).classList.remove('active'));
-  $(id).style.display='block';
-  const ptMap={tabVoice:'ptVoice',tabGallery:'ptGallery',tabPrayer:'ptPrayer',tabMemories:'ptMemories',tabCandles:'ptCandles'};
-  $(ptMap[id]).classList.add('active');
+// TABS
+function stab(i){
+  for(let j=0;j<5;j++){$('t'+j).style.display=j===i?'block':'none';$('pt'+j).classList.toggle('on',j===i);}
 }
 
-// ── LOAD ALL DATA ──
-async function loadAllData(){
-  await Promise.all([loadGallery(),loadPrayer(),loadMemories(),loadCandles(),loadTicker()]);
-}
+// DATA LOAD
+async function loadAll(){await Promise.all([loadGallery(),loadPrayer(),loadMemories(),loadCandles(),loadTicker()])}
 
-// ── GALLERY ──
+// GALLERY
 async function loadGallery(){
-  try{
-    const res=await fetch('/api/gallery');const data=await res.json();
-    renderGallery(data.gallery||[]);
-  }catch(e){}
+  try{const d=await(await fetch('/api/gallery')).json();renderGal(d.gallery||[])}catch(e){}
 }
-function renderGallery(items){
-  const g=$('galleryGrid');
-  let html=items.map(item=>`
-    <div class="gallery-item">
-      <img src="${item.photo}" alt="${escHtml(item.name)}" loading="lazy"/>
-      <div class="gallery-item-name">${escHtml(item.name)}</div>
-      ${item.year?`<div class="gallery-item-year">${escHtml(item.year)}</div>`:''}
-    </div>`).join('');
-  if(state.isAdmin) html+=`<div class="gallery-add" onclick="$('galleryModal').classList.remove('hidden')"><div class="ga-icon">➕</div><span>افزودن</span></div>`;
-  g.innerHTML=html;
+function renderGal(items){
+  let h=items.map(i=>`<div class="gi"><img src="${i.photo}" loading="lazy"/><div class="gi-name">${esc(i.name)}</div>${i.year?`<div class="gi-year">${esc(i.year)}</div>`:''}</div>`).join('');
+  if(S.isAdmin)h+=`<div class="g-add" onclick="$('galModal').classList.remove('h')"><div style="font-size:2rem">➕</div><span>افزودن</span></div>`;
+  $('galleryGrid').innerHTML=h;
 }
-async function uploadGallery(){
-  const name=$('gName').value.trim();const year=$('gYear').value.trim();const file=$('gPhoto').files[0];
-  if(!name){showToast('⚠️ اسم رو وارد کن');return}
-  if(!file){showToast('⚠️ عکس انتخاب کن');return}
-  const reader=new FileReader();
-  reader.onload=async(e)=>{
-    const photo=e.target.result;
-    try{
-      const res=await fetch('/api/gallery',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:state.adminCode,name,photo,year})});
-      const d=await res.json();if(d.error)throw new Error(d.error);
-      closeModal('galleryModal');$('gName').value='';$('gYear').value='';$('gPhoto').value='';
-      showToast('✅ عکس اضافه شد');loadGallery();
-    }catch(err){showToast('❌ '+err.message)}
-  };
-  reader.readAsDataURL(file);
+async function uploadGal(){
+  const name=$('gName').value.trim(),year=$('gYear').value.trim(),file=$('gPhoto').files[0];
+  if(!name||!file){toast('⚠️ اسم و عکس رو وارد کن');return}
+  const r=new FileReader();r.onload=async e=>{
+    try{const d=await(await fetch('/api/gallery',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:S.adminCode,name,photo:e.target.result,year})})).json();
+    if(d.error)throw new Error(d.error);
+    $('galModal').classList.add('h');$('gName').value='';$('gYear').value='';$('gPhoto').value='';
+    toast('✅ عکس اضافه شد');loadGallery();}catch(e){toast('❌ '+e.message)}
+  };r.readAsDataURL(file);
 }
 
-// ── PRAYER ──
-async function loadPrayer(){
-  try{const res=await fetch('/api/prayer');const d=await res.json();$('prayerText').textContent=d.text;if($('prayerEditInput'))$('prayerEditInput').value=d.text;}catch(e){}
-}
-function togglePrayerEdit(){
-  const area=$('prayerEditArea');const hidden=area.style.display==='none'||!area.style.display;
-  area.style.display=hidden?'block':'none';
-  $('prayerEditBtn').textContent=hidden?'❌ بستن':'✏️ ویرایش متن دعا';
-}
+// PRAYER
+async function loadPrayer(){try{const d=await(await fetch('/api/prayer')).json();$('prayerTxt').textContent=d.text;$('prEditIn').value=d.text;}catch(e){}}
+function togglePrEdit(){const a=$('prEditArea');const h=!a.style.display||a.style.display==='none';a.style.display=h?'block':'none';$('prEditBtn').textContent=h?'❌ بستن':'✏️ ویرایش دعا';}
 async function savePrayer(){
-  const text=$('prayerEditInput').value.trim();if(!text)return;
-  try{
-    const res=await fetch('/api/prayer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:state.adminCode,text})});
-    const d=await res.json();if(d.error)throw new Error(d.error);
-    $('prayerText').textContent=text;togglePrayerEdit();showToast('✅ متن دعا ذخیره شد');
-  }catch(e){showToast('❌ '+e.message)}
+  const t=$('prEditIn').value.trim();if(!t)return;
+  try{const d=await(await fetch('/api/prayer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:S.adminCode,text:t})})).json();
+  if(d.error)throw new Error(d.error);$('prayerTxt').textContent=t;togglePrEdit();toast('✅ دعا ذخیره شد');}catch(e){toast('❌ '+e.message)}
 }
+async function loadRoomPrayer(){try{const d=await(await fetch('/api/prayer')).json();$('roomPrText').textContent=d.text;$('roomPrText').style.fontSize=FS[fsIdx];}catch(e){}}
+function chFS(dir){fsIdx=Math.max(0,Math.min(4,fsIdx+dir));$('roomPrText').style.fontSize=FS[fsIdx];$('fsLbl').textContent=FL[fsIdx];}
 
-// ── MEMORIES ──
-async function loadMemories(){
-  try{const res=await fetch('/api/memories');const d=await res.json();renderMemories(d.memories||[]);}catch(e){}
-}
-function renderMemories(list){
-  $('memoriesList').innerHTML=list.length?list.map(m=>`
-    <div class="memory-card">
-      <div class="memory-author">${escHtml(m.author)}<span class="memory-date">${m.date||''}</span></div>
-      <div class="memory-text">${escHtml(m.text)}</div>
-    </div>`).join('')
-    :'<p style="color:var(--txt3);text-align:center;padding:1rem;font-size:.85rem">هنوز خاطره‌ای ثبت نشده...<br/>اولین نفر باش!</p>';
-}
+// MEMORIES
+async function loadMemories(){try{const d=await(await fetch('/api/memories')).json();renderMems(d.memories||[]);}catch(e){}}
+function renderMems(list){$('memList').innerHTML=list.length?list.map(m=>`<div class="mc"><div class="mc-author">${esc(m.author)}<span style="font-size:.65rem;color:var(--txt3)">${m.date||''}</span></div><div class="mc-text">${esc(m.text)}</div></div>`).join(''):'<p style="color:var(--txt3);text-align:center;padding:1rem;font-size:.85rem">هنوز خاطره‌ای نیست</p>';}
 async function addMemory(){
-  const text=$('memoryInput').value.trim();if(!text){showToast('⚠️ متن خاطره رو بنویس');return}
-  try{
-    const res=await fetch('/api/memories',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({author:state.user.name,text})});
-    const d=await res.json();if(d.error)throw new Error(d.error);
-    $('memoryInput').value='';showToast('💝 خاطره ثبت شد');loadMemories();
-  }catch(e){showToast('❌ '+e.message)}
+  const t=$('memIn').value.trim();if(!t){toast('⚠️ متن بنویس');return}
+  try{const d=await(await fetch('/api/memories',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({author:S.user.name,text:t})})).json();
+  if(d.error)throw new Error(d.error);$('memIn').value='';toast('💝 ثبت شد');loadMemories();}catch(e){toast('❌ '+e.message)}
 }
 
-// ── CANDLES ──
-async function loadCandles(){
-  try{const res=await fetch('/api/candles');const d=await res.json();renderCandles(d.candles||[],d.count||0);}catch(e){}
-}
-function renderCandles(list,count){
-  $('candlesDisplay').innerHTML=list.slice(0,30).map(c=>`
-    <div class="candle-flame"><span class="candle-emoji">🕯️</span><span class="candle-name">${escHtml(c.name)}</span></div>`).join('');
-  $('candleCount').textContent=count?`${count} شمع روشن شده 🕯️`:'';
-}
-async function lightCandle(){
-  try{
-    const res=await fetch('/api/candles',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:state.user.name})});
-    const d=await res.json();if(d.error)throw new Error(d.error);
-    showToast('🕯️ شمعت روشن شد! روحشان شاد');loadCandles();
-  }catch(e){showToast('❌ '+e.message)}
-}
+// CANDLES
+async function loadCandles(){try{const d=await(await fetch('/api/candles')).json();renderCandles(d.candles||[],d.count||0);}catch(e){}}
+function renderCandles(list,cnt){$('candlesWrap').innerHTML=list.slice(0,30).map(c=>`<div class="cf"><span class="cf-e">🕯️</span><span class="cf-n">${esc(c.name)}</span></div>`).join('');$('candleCnt').textContent=cnt?cnt+' شمع روشن 🕯️':'';}
+async function lightCandle(){try{await fetch('/api/candles',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:S.user.name})});toast('🕯️ شمعت روشن شد!');loadCandles();}catch(e){}}
 
-// ── TICKER ──
-let tickerItems=[];
-async function loadTicker(){
-  try{const res=await fetch('/api/deceased');const d=await res.json();tickerItems=d.list||[];renderTicker();}catch(e){}
-}
+// TICKER
+let tkItems=[];
+async function loadTicker(){try{const d=await(await fetch('/api/deceased')).json();tkItems=d.list||[];renderTicker();}catch(e){}}
 function renderTicker(){
   stopTicker();
-  if(!tickerItems.length){$('tickerWrap').style.display='none';return}
+  if(!tkItems.length){$('tickerWrap').style.display='none';return}
   $('tickerWrap').style.display='block';
-  const html=tickerItems.map(item=>`<span class="ticker-item">${escHtml(item)}</span><span class="ticker-sep">◆</span>`).join('');
-  $('tickerTrack').innerHTML=html;$('tickerTrack2').innerHTML=html;
-  setTimeout(()=>{
-    tickerWidth=$('tickerTrack').offsetWidth||800;
-    tickerOffset=0;lastTime=null;
-    tickerAnim=requestAnimationFrame(animTicker);
-  },150);
+  const h=tkItems.map(i=>`<span class="tk-item">${esc(i)}</span><span class="tk-sep">◆</span>`).join('');
+  $('tkT1').innerHTML=h;$('tkT2').innerHTML=h;
+  setTimeout(()=>{tkW=$('tkT1').offsetWidth||600;tkOff=0;tkLast=null;tkAnim=requestAnimationFrame(tkStep);},150);
 }
-function animTicker(ts){
-  if(!lastTime)lastTime=ts;
-  const delta=ts-lastTime;lastTime=ts;
-  tickerOffset+=(SPEED*delta)/1000;
-  if(tickerOffset>=tickerWidth)tickerOffset-=tickerWidth;
-  $('tickerInner').style.transform=`translateX(-${tickerOffset}px)`;
-  tickerAnim=requestAnimationFrame(animTicker);
-}
-function stopTicker(){if(tickerAnim){cancelAnimationFrame(tickerAnim);tickerAnim=null;}lastTime=null;}
+function tkStep(ts){if(!tkLast)tkLast=ts;const d=ts-tkLast;tkLast=ts;tkOff+=(SPD*d)/1000;if(tkOff>=tkW)tkOff-=tkW;$('tkInner').style.transform=`translateX(-${tkOff}px)`;tkAnim=requestAnimationFrame(tkStep);}
+function stopTicker(){if(tkAnim){cancelAnimationFrame(tkAnim);tkAnim=null;}tkLast=null;}
 
-// ── DECEASED ADMIN ──
-function buildDecPanel(){
-  const p=$('deceasedListAdmin');
-  p.innerHTML=tickerItems.length?tickerItems.map((item,i)=>`
-    <div class="dec-row">
-      <input type="text" value="${escHtml(item)}" id="di_${i}" placeholder="نام — سال‌ها"/>
-      <button class="dec-del" onclick="removeDecRow(${i})">✕</button>
-    </div>`).join('')
-    :'<p style="color:var(--txt3);font-size:.78rem;text-align:center;padding:.5rem">اسمی نیست — افزودن کن</p>';
-}
-function addDecRow(){tickerItems.push('');buildDecPanel();setTimeout(()=>{const ins=document.querySelectorAll('.dec-row input');if(ins.length)ins[ins.length-1].focus()},100)}
-function removeDecRow(i){tickerItems.splice(i,1);buildDecPanel()}
+// DECEASED ADMIN
+function buildDecPanel(){$('decListAdmin').innerHTML=tkItems.length?tkItems.map((it,i)=>`<div class="dec-row"><input type="text" value="${esc(it)}" id="di${i}" placeholder="نام — سال‌ها"/><button class="dec-del" onclick="rmDec(${i})">✕</button></div>`).join(''):'<p style="color:var(--txt3);font-size:.75rem;text-align:center;padding:.5rem">اسمی نیست</p>';}
+function addDecRow(){tkItems.push('');buildDecPanel();setTimeout(()=>{const ins=document.querySelectorAll('.dec-row input');if(ins.length)ins[ins.length-1].focus()},80)}
+function rmDec(i){tkItems.splice(i,1);buildDecPanel()}
 async function saveDeceased(){
   const ins=document.querySelectorAll('.dec-row input');
   const list=[...ins].map(i=>i.value.trim()).filter(v=>v);
-  try{
-    const res=await fetch('/api/deceased',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:state.adminCode,list})});
-    const d=await res.json();if(d.error)throw new Error(d.error);
-    tickerItems=list;renderTicker();showToast('✅ زیرنویس آپدیت شد!');
-  }catch(e){showToast('❌ '+e.message)}
+  try{const d=await(await fetch('/api/deceased',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:S.adminCode,list})})).json();
+  if(d.error)throw new Error(d.error);tkItems=list;renderTicker();toast('✅ زیرنویس آپدیت شد');}catch(e){toast('❌ '+e.message)}
 }
 
-// ── JOIN ROOM ──
+// CHAT
+function toggleChat(){
+  chatOpen=!chatOpen;
+  $('chatPanel').classList.toggle('open',chatOpen);
+  if(chatOpen){chatUnread=0;updateChatBadge();setTimeout(()=>{const b=$('chatBody');b.scrollTop=b.scrollHeight},50);}
+  // ticker بالای چت برو
+  const ch=chatOpen?(220+38+44):0;
+  $('tickerWrap').style.bottom=(115+ch)+'px';
+}
+function updateChatBadge(){const s=chatUnread>0;$('chatBadge').style.display=s?'flex':'none';$('chatBadge').textContent=chatUnread;$('chatBtnLbl').textContent=s?`چت(${chatUnread})`:'چت';}
+async function sendChat(){
+  if(!room)return;const inp=$('chatIn');const txt=inp.value.trim();if(!txt)return;inp.value='';
+  addChatMsg({text:txt,sender:S.user.name,isMe:true,time:new Date().toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})});
+  try{const enc=new TextEncoder();await room.localParticipant.publishData(enc.encode(JSON.stringify({type:'chat',text:txt,sender:S.user.name})),{reliable:true});}catch(e){}
+}
+function addChatMsg(m){
+  chatMsgs.push(m);const b=$('chatBody');
+  if(chatMsgs.length===1)b.innerHTML='';
+  const d=document.createElement('div');d.className='chat-msg '+(m.isMe?'me':'other');
+  d.innerHTML=`${!m.isMe?`<div class="chat-sndr">${esc(m.sender)}</div>`:''}<div class="chat-bbl">${esc(m.text)}</div>`;
+  b.appendChild(d);
+  if(!chatOpen){chatUnread++;updateChatBadge();}else{b.scrollTop=b.scrollHeight;}
+}
+
+// JOIN ROOM
 async function joinRoom(){
-  state.intentionalLeave = false; // اجازه reconnect در این session
-  setLoading(true,'در حال گرفتن مجوز...');
+  S.leaving=false;
+  $('ldg').classList.remove('h');$('ldgMsg').textContent='در حال گرفتن مجوز...';
   try{
-    const res=await fetch('/api/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userName:state.user.name,adminCode:state.isAdmin?state.adminCode:''})});
+    const res=await fetch('/api/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userName:S.user.name,adminCode:S.isAdmin?S.adminCode:''})});
     const data=await res.json();
     if(data.error)throw new Error(data.error);
-    if(state.isAdmin&&!data.isAdmin){setLoading(false);showToast('❌ کد مدیر اشتباهه!',3000);return}
-    state.isAdmin=data.isAdmin;state.canSpeak=data.isAdmin;state.mic=false;
-    setLoading(true,'در حال اتصال...');
-    room=new LivekitClient.Room({adaptiveStream:true,dynacast:true,audioCaptureDefaults:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-    room.on(LivekitClient.RoomEvent.ParticipantConnected,p=>{addRemote(p);showToast('👋 '+(p.name||p.identity)+' وارد شد')});
-    room.on(LivekitClient.RoomEvent.ParticipantDisconnected,p=>{const n=participants[p.sid]?.name||p.identity;delete participants[p.sid];renderAll();showToast('🚶 '+n+' رفت')});
-    room.on(LivekitClient.RoomEvent.TrackSubscribed,(track)=>{if(track.kind===LivekitClient.Track.Kind.Audio){const el=track.attach();el.style.display='none';document.body.appendChild(el)}});
+    if(S.isAdmin&&!data.isAdmin){$('ldg').classList.add('h');toast('❌ کد مدیر اشتباهه!',3000);return}
+    S.isAdmin=data.isAdmin;S.canSpeak=data.isAdmin;S.mic=false;
+
+    $('ldgMsg').textContent='در حال اتصال...';
+
+    if(room){try{await room.disconnect()}catch(e){}}
+
+    room=new LivekitClient.Room({
+      adaptiveStream:true,
+      dynacast:true,
+      audioCaptureDefaults:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},
+      reconnectPolicy:{maxRetryDelay:5000,maxRetries:5}
+    });
+
+    room.on(LivekitClient.RoomEvent.Connected,()=>{
+      $('ldg').classList.add('h');
+      show('room');
+      S.myId=room.localParticipant.identity;
+      $('adminPanel').style.display=S.isAdmin?'block':'none';
+      $('decPanel').style.display=S.isAdmin?'block':'none';
+      if(S.isAdmin)buildDecPanel();
+      $('chatWrap').style.display='block';
+      parts={};
+      addLocal();
+      room.remoteParticipants.forEach(p=>addRemote(p));
+      renderAll();
+      loadTicker();
+      startPoll();
+      $('sbar').textContent='✅ متصل شدی!';
+      setTimeout(()=>$('sbar').textContent='',3000);
+      if(S.isAdmin){room.localParticipant.setMicrophoneEnabled(true).then(()=>{S.mic=true;S.canSpeak=true;updMic();renderAll()}).catch(()=>{});}
+    });
+
+    room.on(LivekitClient.RoomEvent.Disconnected,(reason)=>{
+      if(S.leaving)return;
+      $('sbar').textContent='🔌 اتصال قطع شد...';
+      toast('🔌 در حال اتصال مجدد...',3000);
+    });
+
+    room.on(LivekitClient.RoomEvent.Reconnecting,()=>{$('sbar').textContent='🔄 در حال اتصال مجدد...'});
+    room.on(LivekitClient.RoomEvent.Reconnected,()=>{$('sbar').textContent='✅ دوباره وصل شد!';setTimeout(()=>$('sbar').textContent='',3000)});
+
+    room.on(LivekitClient.RoomEvent.ParticipantConnected,p=>{addRemote(p);toast('👋 '+(p.name||p.identity)+' وارد شد')});
+    room.on(LivekitClient.RoomEvent.ParticipantDisconnected,p=>{const n=parts[p.sid]?.name||p.identity;delete parts[p.sid];renderAll();toast('🚶 '+n+' رفت')});
+    room.on(LivekitClient.RoomEvent.TrackSubscribed,(track)=>{if(track.kind==='audio'){const el=track.attach();el.style.display='none';document.body.appendChild(el)}});
     room.on(LivekitClient.RoomEvent.TrackUnsubscribed,t=>t.detach().forEach(el=>el.remove()));
-    room.on(LivekitClient.RoomEvent.ActiveSpeakersChanged,spks=>{Object.values(participants).forEach(p=>p.speaking=false);spks.forEach(p=>{const k=p.isLocal?'local':p.sid;if(participants[k])participants[k].speaking=true});renderAll()});
+    room.on(LivekitClient.RoomEvent.ActiveSpeakersChanged,spks=>{Object.values(parts).forEach(p=>p.spk=false);spks.forEach(p=>{const k=p.isLocal?'local':p.sid;if(parts[k])parts[k].spk=true});renderAll()});
     room.on(LivekitClient.RoomEvent.TrackMuted,()=>renderAll());
     room.on(LivekitClient.RoomEvent.TrackUnmuted,()=>renderAll());
-    room.on(LivekitClient.RoomEvent.Disconnected,(reason)=>{
-      // فقط اگه غیرعمدی قطع شد دوباره وصل میشه — نه موقع خروج دستی
-      if(!state.intentionalLeave && reason && reason !== 'CLIENT_INITIATED'){
-        showToast('🔌 اتصال قطع شد — دوباره امتحان...',3000);
-        setTimeout(()=>{if(!state.intentionalLeave)joinRoom()},3000);
-      } else {
-        stopTicker();$('tickerWrap').style.display='none';
-        show('home');
-      }
+
+    room.on(LivekitClient.RoomEvent.DataReceived,(data)=>{
+      try{
+        const msg=JSON.parse(new TextDecoder().decode(data));
+        if(msg.type==='chat'){addChatMsg({...msg,isMe:false});}
+        else if(msg.type==='perm_granted'&&room.localParticipant.identity===msg.target){
+          S.canSpeak=true;if(parts['local'])parts['local'].canSpeak=true;
+          $('permDlg').classList.remove('h');
+        }
+        else if(msg.type==='admin_mute'&&room.localParticipant.identity===msg.target){
+          room.localParticipant.setMicrophoneEnabled(false);S.mic=false;updMic();
+          if(parts['local'])parts['local'].muted=true;renderAll();
+          toast('🔇 مدیر میکروفون شما را خاموش کرد',4000);
+        }
+      }catch(e){}
     });
-    let connected=false;
-    for(let i=1;i<=3;i++){
-      try{setLoading(true,i>1?`تلاش ${i} از ۳...`:'در حال اتصال...');await room.connect(data.wsUrl,data.token);connected=true;break}
-      catch(e){if(i<3)await new Promise(r=>setTimeout(r,2000))}
-    }
-    if(!connected)throw new Error('اتصال برقرار نشد');
-    state.myIdentity=room.localParticipant.identity;
-    if(state.isAdmin){await room.localParticipant.setMicrophoneEnabled(true);state.mic=true;state.canSpeak=true}
-    participants['local']={name:state.user.name,av:AVATARS[state.user.av],isAdmin:state.isAdmin,canSpeak:state.isAdmin,muted:!state.mic,speaking:false,handUp:false,isMe:true,identity:state.myIdentity};
-    room.remoteParticipants.forEach(p=>addRemote(p));
-    setLoading(false);show('room');
-    // تنظیم ticker position بالای controls
-    $('tickerWrap').style.bottom='130px';
-    $('adminPanel').style.display=state.isAdmin?'block':'none';
-    $('deceasedPanel').style.display=state.isAdmin?'block':'none';
-    $('editTickerBtn').style.display=state.isAdmin?'flex':'none';
-    updateMicBtn();renderAll();
-    $('statusBar').textContent='✅ متصل شدی!';setTimeout(()=>$('statusBar').textContent='',3000);
-    loadTicker();if(state.isAdmin)buildDecPanel();
-    initChat();
-    startPolling();
-  }catch(e){setLoading(false);console.error(e);showToast('❌ '+e.message,4000)}
-}
 
-function addRemote(p){
-  const av=AVATARS[Math.floor(Math.random()*AVATARS.length)];
-  participants[p.sid]={name:p.name||p.identity||'مهمان',av,isAdmin:false,canSpeak:false,muted:!p.isMicrophoneEnabled,speaking:false,handUp:false,isMe:false,identity:p.identity,sid:p.sid};
-  renderAll();
-}
+    await room.connect(data.wsUrl,data.token);
 
-// ── RENDER ROOM ──
-function renderAll(){
-  const all=Object.values(participants);
-  const spks=all.filter(p=>p.canSpeak||p.isAdmin);
-  const aud=all.filter(p=>!p.canSpeak&&!p.isAdmin);
-  if(participants['local'])participants['local'].muted=!state.mic;
-  $('spkCount').textContent=spks.length;$('audCount').textContent=aud.length;
-  $('speakersGrid').innerHTML=spks.length?spks.map(p=>`
-    <div class="p-item">
-      ${p.isAdmin?'<span class="p-star">👑</span>':''}
-      <div class="p-av ${p.speaking?'speaking':''} ${p.muted?'muted':''}" style="background:${p.av.bg}">${p.av.e}</div>
-      <div class="p-name">${escHtml(p.name)}</div>
-      <div class="p-role">${p.isMe?'(شما)':p.isAdmin?'مدیر':'سخنران'}</div>
-    </div>`).join('')
-    :'<p style="color:var(--txt3);font-size:.8rem;grid-column:span 3;text-align:center;padding:1rem">سخنرانی نیست</p>';
-  $('audienceGrid').innerHTML=aud.length?aud.map(p=>`
-    <div class="p-item" ${state.isAdmin&&p.handUp?`onclick="adminAllow('${p.identity}','${escHtml(p.name)}')"`:''}>
-      <div class="aud-av ${p.handUp?'hand-up':''}" style="background:${p.av.bg}">${p.av.e}</div>
-      <div class="aud-name">${escHtml(p.name)}${p.isMe?' (شما)':''}</div>
-      ${p.handUp?'<div style="font-size:.65rem;text-align:center">✋</div>':''}
-    </div>`).join('')
-    :'<p style="color:var(--txt3);font-size:.78rem;grid-column:span 5;text-align:center">شنونده‌ای نیست</p>';
-  if(state.isAdmin){
-    const reqs=all.filter(p=>p.handUp&&!p.isMe);
-    $('handRequests').innerHTML=reqs.length?reqs.map(p=>`
-      <div class="hand-req">
-        <span style="font-size:.85rem;font-weight:600">✋ ${escHtml(p.name)}</span>
-        <div style="display:flex;gap:6px">
-          <button class="allow-btn" onclick="adminAllow('${p.identity}','${escHtml(p.name)}')">🎤 اجازه</button>
-          <button class="deny-btn" onclick="adminDeny('${p.identity}','${escHtml(p.name)}')">رد</button>
-        </div>
-      </div>`).join('')
-      :'<div style="font-size:.75rem;color:var(--txt3);text-align:center;padding:.5rem">درخواستی نیست ✅</div>';
+  }catch(e){
+    $('ldg').classList.add('h');
+    console.error('joinRoom error:',e);
+    toast('❌ خطا: '+e.message,5000);
   }
 }
 
-// ── POLLING ──
-async function startPolling(){if(pollInt)clearInterval(pollInt);await syncState();pollInt=setInterval(syncState,4000)}
+function addLocal(){
+  parts['local']={name:S.user.name,av:AVS[S.user.av],isAdmin:S.isAdmin,canSpeak:S.isAdmin,muted:true,spk:false,isMe:true,id:S.myId};
+}
+function addRemote(p){
+  const av=AVS[~~(Math.random()*AVS.length)];
+  parts[p.sid]={name:p.name||p.identity||'مهمان',av,isAdmin:false,canSpeak:false,muted:!p.isMicrophoneEnabled,spk:false,isMe:false,id:p.identity,sid:p.sid};
+}
+
+// RENDER
+function renderAll(){
+  const all=Object.values(parts);
+  if(parts['local'])parts['local'].muted=!S.mic;
+  const spks=all.filter(p=>p.canSpeak||p.isAdmin);
+  const auds=all.filter(p=>!p.canSpeak&&!p.isAdmin);
+  $('spkCnt').textContent=spks.length;$('audCnt').textContent=auds.length;
+  $('spkGrid').innerHTML=spks.length?spks.map(p=>`
+    <div class="pi">
+      ${p.isAdmin?'<span class="pstar">👑</span>':''}
+      <div class="pav ${p.spk?'speaking':''} ${p.muted?'muted':''}" style="background:${p.av.bg}">${p.av.e}</div>
+      <div class="pn">${esc(p.name)}</div>
+      <div class="pr">${p.isMe?'(شما)':p.isAdmin?'مدیر':'سخنران'}</div>
+      ${S.isAdmin&&!p.isMe?`<button class="mute-btn" onclick="doMute('${p.id}','${esc(p.name)}',${p.muted})">${p.muted?'🔊 روشن':'🔇 خاموش'}</button>`:''}
+    </div>`).join('')
+    :'<p style="color:var(--txt3);font-size:.78rem;grid-column:span 3;text-align:center;padding:1rem">سخنرانی نیست</p>';
+  $('audGrid').innerHTML=auds.length?auds.map(p=>`
+    <div class="pi">
+      <div class="aav ${p.hu?'hu':''}" style="background:${p.av.bg}">${p.av.e}</div>
+      <div class="an">${esc(p.name)}${p.isMe?' (شما)':''}</div>
+      ${p.hu?'<div style="font-size:.6rem;text-align:center">✋</div>':''}
+    </div>`).join('')
+    :'<p style="color:var(--txt3);font-size:.75rem;grid-column:span 5;text-align:center">شنونده‌ای نیست</p>';
+  if(S.isAdmin){
+    const reqs=all.filter(p=>p.hu&&!p.isMe);
+    $('handReqs').innerHTML=reqs.length?reqs.map(p=>`
+      <div class="hreq">
+        <span style="font-size:.82rem;font-weight:600">✋ ${esc(p.name)}</span>
+        <div style="display:flex;gap:6px">
+          <button class="allow-btn" onclick="grantSpeak('${p.id}','${esc(p.name)}')">🎤 اجازه</button>
+          <button class="deny-btn" onclick="denySpeak('${p.id}','${esc(p.name)}')">رد</button>
+        </div>
+      </div>`).join('')
+      :'<div style="font-size:.73rem;color:var(--txt3);text-align:center;padding:.5rem">درخواستی نیست ✅</div>';
+  }
+}
+
+// POLL
+async function startPoll(){if(pollT)clearInterval(pollT);await syncState();pollT=setInterval(syncState,4000)}
 async function syncState(){
   try{
-    const res=await fetch('/api/room-state');const d=await res.json();
-    Object.values(participants).forEach(p=>{
-      if(p.identity){
-        p.handUp=d.handsUp.includes(p.identity);
-        if(!p.isAdmin){const was=p.canSpeak;p.canSpeak=d.speakers.includes(p.identity);if(p.isMe&&!was&&p.canSpeak)enableMyMic()}
+    const d=await(await fetch('/api/room-state')).json();
+    Object.values(parts).forEach(p=>{
+      if(!p.id)return;
+      p.hu=d.handsUp.includes(p.id);
+      if(!p.isAdmin){
+        const was=p.canSpeak;
+        p.canSpeak=d.allowedSpeakers.includes(p.id);
+        if(p.isMe&&!was&&p.canSpeak)$('permDlg').classList.remove('h');
       }
     });
     renderAll();
   }catch(e){}
 }
-async function enableMyMic(){
+
+// MIC ACCEPT
+async function acceptMic(){
+  $('permDlg').classList.add('h');
   if(!room)return;
-  try{await room.localParticipant.setMicrophoneEnabled(true);state.mic=true;state.canSpeak=true;state.hand=false;$('handBtn').className='ctrl-btn';updateMicBtn();renderAll();showToast('🎤 مدیر اجازه صحبت داد!',4000);await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:state.myIdentity,raised:false})})}catch(e){}
+  try{
+    await room.localParticipant.setMicrophoneEnabled(true);
+    S.mic=true;S.canSpeak=true;S.hand=false;
+    if(parts['local']){parts['local'].muted=false;parts['local'].canSpeak=true;}
+    $('handBtn').className='cbtn';
+    updMic();renderAll();
+    toast('🎤 میکروفون روشن شد!',3000);
+    await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:S.myId,raised:false})});
+  }catch(e){toast('❌ خطا در روشن کردن میکروفون',3000);console.error(e);}
 }
 
-// ── ADMIN ──
-async function adminAllow(identity,name){
-  if(!state.isAdmin)return;
-  try{await fetch('/api/allow-speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:state.adminCode,targetIdentity:identity,allow:true})});showToast('✅ به '+name+' اجازه داده شد');await syncState()}catch(e){}
-}
-async function adminDeny(identity,name){
-  if(!state.isAdmin)return;
-  try{await fetch('/api/allow-speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:state.adminCode,targetIdentity:identity,allow:false})});await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity,raised:false})});showToast('❌ درخواست '+name+' رد شد');await syncState()}catch(e){}
-}
-
-// ── CONTROLS ──
+// CONTROLS
 async function toggleMic(){
   if(!room)return;
-  if(!state.canSpeak&&!state.isAdmin){showToast('⚠️ دست بلند کن تا مدیر اجازه بده!',3000);return}
-  state.mic=!state.mic;await room.localParticipant.setMicrophoneEnabled(state.mic);
-  if(participants['local'])participants['local'].muted=!state.mic;
-  updateMicBtn();renderAll();showToast(state.mic?'🎤 روشن شد':'🔇 خاموش شد');
+  if(!S.canSpeak&&!S.isAdmin){toast('⚠️ دست بلند کن تا مدیر اجازه بده!',3000);return}
+  S.mic=!S.mic;
+  try{await room.localParticipant.setMicrophoneEnabled(S.mic);}catch(e){S.mic=!S.mic;return}
+  if(parts['local'])parts['local'].muted=!S.mic;
+  updMic();renderAll();
+  toast(S.mic?'🎤 روشن شد':'🔇 خاموش شد');
 }
-function updateMicBtn(){const b=$('micBtn'),i=$('micIco'),l=$('micLbl');if(state.mic){b.className='ctrl-btn mic-on';i.textContent='🎤';l.textContent='میکروفون'}else{b.className='ctrl-btn mic-off';i.textContent='🔇';l.textContent='بی‌صدا'}}
+function updMic(){const b=$('micBtn'),i=$('micIco'),l=$('micLbl');if(S.mic){b.className='cbtn mon';i.textContent='🎤';l.textContent='میکروفون'}else{b.className='cbtn moff';i.textContent='🔇';l.textContent='بی‌صدا'}}
+
 async function toggleHand(){
-  if(state.isAdmin||state.canSpeak)return;
-  state.hand=!state.hand;$('handBtn').className=state.hand?'ctrl-btn raised':'ctrl-btn';
-  try{await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:state.myIdentity,raised:state.hand})});if(participants['local'])participants['local'].handUp=state.hand;showToast(state.hand?'✋ درخواست فرستادی!':'دست پایین آمد');renderAll()}catch(e){}
+  if(S.isAdmin||S.canSpeak)return;
+  S.hand=!S.hand;
+  $('handBtn').className=S.hand?'cbtn hup':'cbtn';
+  try{await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:S.myId,raised:S.hand})});
+  if(parts['local'])parts['local'].hu=S.hand;toast(S.hand?'✋ درخواست فرستادی!':'دست پایین آمد');renderAll();}catch(e){}
 }
-const reactions=['🤲','🌹','❤️','🕊️','🙏','💐','☮️'];let ri=0;
-function sendReaction(){showToast(reactions[ri%reactions.length]+' فرستادی');ri++}
+
+async function grantSpeak(id,name){
+  if(!state||!S.isAdmin)return;
+  try{
+    await fetch('/api/allow-speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:S.adminCode,identity:id,allow:true})});
+    // Data Channel برای اطلاع فوری
+    if(room){const enc=new TextEncoder();await room.localParticipant.publishData(enc.encode(JSON.stringify({type:'perm_granted',target:id})),{reliable:true});}
+    toast('✅ به '+name+' اجازه داده شد');await syncState();
+  }catch(e){toast('❌ خطا')}
+}
+
+async function denySpeak(id,name){
+  if(!S.isAdmin)return;
+  try{
+    await fetch('/api/allow-speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:S.adminCode,identity:id,allow:false})});
+    await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:id,raised:false})});
+    toast('❌ درخواست '+name+' رد شد');await syncState();
+  }catch(e){}
+}
+
+async function doMute(id,name,isMuted){
+  if(!room||!S.isAdmin)return;
+  try{
+    const enc=new TextEncoder();
+    const type=isMuted?'admin_unmute_req':'admin_mute';
+    await room.localParticipant.publishData(enc.encode(JSON.stringify({type,target:id})),{reliable:true});
+    toast(isMuted?'🔊 درخواست روشن کردن فرستاده شد':'🔇 '+name+' میوت شد');
+  }catch(e){}
+}
+
+const rxns=['🤲','🌹','❤️','🕊️','🙏','💐','☮️'];let ri=0;
+function sendReaction(){toast(rxns[ri%rxns.length]+' فرستادی');ri++}
+
 async function leaveRoom(){
-  state.intentionalLeave = true; // جلوگیری از reconnect خودکار
-  if(pollInt){clearInterval(pollInt);pollInt=null}
+  S.leaving=true;
+  if(pollT){clearInterval(pollT);pollT=null}
   stopTicker();$('tickerWrap').style.display='none';
-  if(state.hand&&state.myIdentity)await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:state.myIdentity,raised:false})}).catch(()=>{});
-  if(room){try{await room.disconnect()}catch(e){}}
-  room=null;participants={};state.mic=false;state.hand=false;state.canSpeak=false;state.myIdentity='';
-  state.intentionalLeave=false;
-  resetChat();
-  show('home');showToast('🚪 از اتاق خارج شدی');
-}
-
-
-// ── PRAYER IN ROOM ──
-const FONT_SIZES = ['.78rem','0.88rem','1rem','1.15rem','1.3rem'];
-const FONT_LABELS = ['کوچک','متوسط','بزرگ','خیلی بزرگ','بسیار بزرگ'];
-let fontIdx = 1;
-
-function toggleRoomPrayer() {
-  const body = $('roomPrayerBody');
-  const btn = $('roomPrayerToggleBtn');
-  const isHidden = body.style.display === 'none';
-  body.style.display = isHidden ? 'block' : 'none';
-  btn.textContent = isHidden ? 'بستن ▲' : 'باز کردن ▼';
-  if (isHidden) loadRoomPrayer();
-}
-
-async function loadRoomPrayer() {
-  try {
-    const res = await fetch('/api/prayer');
-    const d = await res.json();
-    $('roomPrayerText').textContent = d.text || '';
-    $('roomPrayerText').style.fontSize = FONT_SIZES[fontIdx];
-  } catch(e) {}
-}
-
-function changeFontSize(dir) {
-  fontIdx = Math.max(0, Math.min(FONT_SIZES.length-1, fontIdx + dir));
-  $('roomPrayerText').style.fontSize = FONT_SIZES[fontIdx];
-  $('fontSizeLabel').textContent = FONT_LABELS[fontIdx];
-}
-
-
-// ── CHAT ──
-let chatOpen = false;
-let chatUnreadCount = 0;
-let chatMessages = [];
-
-function toggleChat() {
-  chatOpen = !chatOpen;
-  const panel = $('chatPanel');
-  const indicator = $('chatIndicator');
-  panel.classList.toggle('open', chatOpen);
-  if (chatOpen) {
-    chatUnreadCount = 0;
-    updateChatUnread();
-    scrollChatBottom();
-    // ticker بره بالای چت + کنترل‌ها
-    const chatHeight = 240 + 38 + 46; // chat-body + input-row + header
-    $('tickerWrap').style.bottom = (130 + chatHeight) + 'px';
-  } else {
-    $('tickerWrap').style.bottom = '130px';
-  }
-}
-
-function updateChatUnread() {
-  const show = chatUnreadCount > 0;
-  $('chatUnread').style.display = show ? 'flex' : 'none';
-  $('chatUnread').textContent = chatUnreadCount;
-  $('chatUnread2').style.display = show ? 'flex' : 'none';
-  $('chatUnread2').textContent = chatUnreadCount;
-  $('chatBtnLbl').textContent = show ? `چت (${chatUnreadCount})` : 'چت';
-}
-
-async function sendChat() {
-  if (!room) return;
-  const input = $('chatInput');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-
-  const msg = {
-    type: 'chat',
-    text,
-    sender: state.user.name,
-    time: new Date().toLocaleTimeString('fa-IR', {hour:'2-digit',minute:'2-digit'}),
-    isMe: true
-  };
-
-  // نمایش پیام خودم
-  addChatMessage(msg);
-
-  // ارسال به بقیه از طریق LiveKit Data Channel
-  try {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(JSON.stringify({type:'chat', text, sender:state.user.name, time:msg.time}));
-    await room.localParticipant.publishData(data, {reliable: true});
-  } catch(e) {
-    console.error('chat send error:', e);
-  }
-}
-
-function addChatMessage(msg) {
-  chatMessages.push(msg);
-  const body = $('chatBody');
-
-  // پاک کردن پیام خوش‌آمد
-  if (chatMessages.length === 1) body.innerHTML = '';
-
-  const div = document.createElement('div');
-  div.className = 'chat-msg ' + (msg.isMe ? 'me' : 'other');
-  div.innerHTML = `
-    ${!msg.isMe ? `<div class="chat-sender">${escHtml(msg.sender)}</div>` : ''}
-    <div class="chat-bubble">${escHtml(msg.text)}</div>
-    <div class="chat-time">${msg.time}</div>`;
-  body.appendChild(div);
-
-  if (!chatOpen) {
-    chatUnreadCount++;
-    updateChatUnread();
-  } else {
-    scrollChatBottom();
-  }
-}
-
-function scrollChatBottom() {
-  const body = $('chatBody');
-  setTimeout(() => body.scrollTop = body.scrollHeight, 50);
-}
-
-function initChat() {
-  if (!room) return;
-  // نمایش المان‌های چت فقط داخل اتاق
-  $('chatPanel').style.display = 'block';
-  // indicator دیگه استفاده نمیشه
-  // گوش دادن به پیام‌های Data Channel
-  room.on(LivekitClient.RoomEvent.DataReceived, (data, participant) => {
-    try {
-      const decoder = new TextDecoder();
-      const msg = JSON.parse(decoder.decode(data));
-      if (msg.type === 'chat') {
-        addChatMessage({...msg, isMe: false});
-        showToast('💬 ' + msg.sender + ': ' + msg.text.substring(0,30) + (msg.text.length>30?'...':''), 2000);
-      }
-    } catch(e) {}
-  });
-}
-
-function resetChat() {
-  chatOpen = false;
-  chatUnreadCount = 0;
-  chatMessages = [];
+  $('chatWrap').style.display='none';
   $('chatPanel').classList.remove('open');
-  $('chatPanel').style.display = 'none'; // مخفی کن
-  // indicator حذف شد
-  $('tickerWrap').style.display = 'none';
-  $('chatBody').innerHTML = '<div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">💬 چت شروع کنید...<br/>پیام‌ها فقط در طول جلسه نگه داشته میشن</div>';
-  updateChatUnread();
+  $('permDlg').classList.add('h');
+  chatOpen=false;chatUnread=0;chatMsgs=[];
+  $('chatBody').innerHTML='<div style="text-align:center;color:var(--txt3);font-size:.78rem;padding:1rem">💬 چت شروع کنید...</div>';
+  updateChatBadge();
+  if(S.hand&&S.myId){await fetch('/api/hand',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identity:S.myId,raised:false})}).catch(()=>{})}
+  if(room){try{await room.disconnect()}catch(e){}}
+  room=null;parts={};S.mic=false;S.hand=false;S.canSpeak=false;S.myId='';
+  show('home');toast('🚪 از اتاق خارج شدی');
 }
 
-buildAvatarPicker();
+buildAv();
 </script>
 </body>
 </html>

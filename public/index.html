@@ -687,7 +687,7 @@ async function toggleHand(){
 }
 
 async function grantSpeak(id,name){
-  if(!state||!S.isAdmin)return;
+  if(!S.isAdmin)return;
   try{
     await fetch('/api/allow-speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminCode:S.adminCode,identity:id,allow:true})});
     // Data Channel برای اطلاع فوری

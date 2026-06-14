@@ -521,10 +521,11 @@ async function joinRoom(){
     if(room){try{await room.disconnect()}catch(e){}}
 
     room=new LivekitClient.Room({
-      adaptiveStream:true,
-      dynacast:true,
+      adaptiveStream:false,
+      dynacast:false,
       audioCaptureDefaults:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},
-      reconnectPolicy:{maxRetryDelay:5000,maxRetries:5}
+      reconnectPolicy:{maxRetryDelay:2000,maxRetries:10},
+      stopLocalTrackOnUnpublish:false,
     });
 
     room.on(LivekitClient.RoomEvent.Connected,()=>{
@@ -548,12 +549,21 @@ async function joinRoom(){
 
     room.on(LivekitClient.RoomEvent.Disconnected,(reason)=>{
       if(S.leaving)return;
-      $('sbar').textContent='🔌 اتصال قطع شد...';
-      toast('🔌 در حال اتصال مجدد...',3000);
+      // فقط اگه کاملاً قطع شد (نه reconnecting)
+      console.log('Disconnected reason:',reason);
+      $('sbar').textContent='🔌 اتصال قطع شد — در حال اتصال مجدد...';
     });
 
-    room.on(LivekitClient.RoomEvent.Reconnecting,()=>{$('sbar').textContent='🔄 در حال اتصال مجدد...'});
-    room.on(LivekitClient.RoomEvent.Reconnected,()=>{$('sbar').textContent='✅ دوباره وصل شد!';setTimeout(()=>$('sbar').textContent='',3000)});
+    room.on(LivekitClient.RoomEvent.Reconnecting,()=>{
+      $('sbar').textContent='🔄 در حال اتصال مجدد...';
+    });
+
+    room.on(LivekitClient.RoomEvent.Reconnected,()=>{
+      $('sbar').textContent='✅ دوباره وصل شد!';
+      setTimeout(()=>$('sbar').textContent='',2000);
+      // sync مجدد بعد از reconnect
+      syncState();
+    });
 
     room.on(LivekitClient.RoomEvent.ParticipantConnected,p=>{addRemote(p);toast('👋 '+(p.name||p.identity)+' وارد شد')});
     room.on(LivekitClient.RoomEvent.ParticipantDisconnected,p=>{const n=parts[p.sid]?.name||p.identity;delete parts[p.sid];renderAll();toast('🚶 '+n+' رفت')});
@@ -634,7 +644,7 @@ function renderAll(){
 }
 
 // POLL
-async function startPoll(){if(pollT)clearInterval(pollT);await syncState();pollT=setInterval(syncState,4000)}
+async function startPoll(){if(pollT)clearInterval(pollT);await syncState();pollT=setInterval(syncState,6000)}
 async function syncState(){
   try{
     const d=await(await fetch('/api/room-state')).json();

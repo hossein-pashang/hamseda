@@ -119,7 +119,7 @@ app.post('/api/candles', (req, res) => {
 // Keepalive
 setInterval(() => {
   require('https').get(APP_URL + '/ping', () => {}).on('error', () => {});
-}, 10 * 60 * 1000);
+}, 5 * 60 * 1000); // هر ۵ دقیقه
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ سرور روی پورت ${PORT}`));
